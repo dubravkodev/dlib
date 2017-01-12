@@ -1,27 +1,64 @@
 <?php
-
     /**
-    * Copyright © 2014-2016 Dubravko Loborec
+    * This file contains the system unit.
+    *
+    * @author Dubravko Loborec <info@dubravkodev.com>
+    * @link http://www.dubravkodev.com/
+    * @copyright 2014-2017 Dubravko Loborec
+    * @license http://www.dubravkodev.com/license/
     */
 
-    /* string utils */
-
+    /**
+    * Function returns the left part of a string.
+    * 
+    * @param string $string
+    * @param integer $n part length
+    * @return string
+    */
     function lefts($string, $n){
         return mb_substr($string, 0, $n);
     }
 
+    /**
+    * Function returns the right part of a string.
+    * 
+    * @param string $string
+    * @param integer $n part length
+    * @return string
+    */
     function rights($string, $n){
         return mb_substr($string, mb_strlen($string) - $n, $n);
     }
 
+    /**
+    * Function returns a string with the part removed from the left side.
+    * 
+    * @param string $string
+    * @param integer $n part length
+    * @return string
+    */
     function ldel($string, $n){
         return mb_substr($string, $n, mb_strlen($string) - $n);
     }
 
+    /**
+    * Function returns a string with the part removed from the right side.
+    * 
+    * @param string $string
+    * @param integer $n part length
+    * @return string
+    */
     function rdel($string, $n){
         return mb_substr($string, 0, mb_strlen($string) - $n);
     }
 
+    /**
+    * Function returns a string from the right side of the string delimited with separator.
+    * 
+    * @param mixed $string
+    * @param mixed $separator
+    * @return string
+    */
     function rpart($string, $separator){
         $p=mb_strrpos($string,$separator);
         if ($p===false)
@@ -30,6 +67,13 @@
             return (ldel($string,$p+mb_strlen($separator)));
     }
 
+    /**
+    * Function returns a string from the left side of the string delimited with separator.
+    * 
+    * @param mixed $string
+    * @param mixed $separator
+    * @return string
+    */
     function lpart($string, $separator){
         $p=mb_strpos($string,$separator);
         if ($p===false)
@@ -38,32 +82,35 @@
             return (lefts($string,$p));
     }
 
+    /**
+    * Shortcut for the PHP strlen function.
+    * 
+    * @param string $string
+    * @return int
+    */
     function len($string){
         return mb_strlen($string);   
     }
 
+    /**
+    * Function returns truncated string with specified width
+    * 
+    * @param string $string
+    * @param int $length
+    * @param booldean $stopanywhere
+    * @return string
+    */
     function add_ellipsis($string, $length, $stopanywhere=false) {
-        //truncates a string to a certain char length, stopping on a word if not specified otherwise.
-        /*   if (mb_strlen($string) > $length) {
-        //limit hit!
-        $string = mb_substr($string,0,($length -3));
-        if ($stopanywhere) {
-        //stop anywhere
-        $string .= '...';
-        } else{
-        //stop on a word.
-        $string = mb_substr($string,0,mb_strrpos($string,' ')).'...';
-        }
-        }
-        return $string; */
         return mb_strimwidth($string, 0, $length, "...");
     }
 
+    /**
+    * Function generates a random string.
+    * 
+    * @param int $length
+    * @return string
+    */
     function rand_string($length = 8){
-        /**
-        * rand_string
-        * generates random string
-        */
         $characters = "0123456789abcdefghijklmnopqrstuvwxyz";
         $string = "";    
         for ($p = 0; $p < $length; $p++) {
@@ -72,26 +119,40 @@
         return $string;
     }
 
-    function rand_color(){
-        /* generates random color */
-        mt_srand((double)microtime()*1000000);
-        $c = '';
-        while(strlen($c)<6){
-            $c .= sprintf("%02X", mt_rand(100, 200));
-        }
-        return $c;
+    /**
+    * Mini mustache like implementation
+    * Function replaces a string inside the curly brackets {{{...}}} with params in array.
+    * Example:
+    * echo m('Today is a {{{var1}}} day', array('var1'=>'nice'));
+    * Result:
+    * Today is a nice day
+    * 
+    * @param string $template
+    * @param array $params
+    * @return string
+    */
+    function m($template, $params){
+        $tagRegex = "|{{{(.*?)}}}|is";
+        return preg_replace_callback(
+            $tagRegex,
+            function ($matches) use ($params) {
+                if (key_exists($matches[1], $params))
+                    return $params[$matches[1]];
+                else
+                    return '';
+            },
+            $template
+        );
     }
 
-    /* file utils */
-
+    /**
+    * Copy a file, or recursively copy a folder and its contents
+    * @param       string   $source    Source path
+    * @param       string   $dest      Destination path
+    * @param       string   $permissions New folder creation permissions
+    * @return      bool     Returns true on success, false on failure
+    */
     function xcopy($source, $dest, $permissions = 0755){
-        /**
-        * Copy a file, or recursively copy a folder and its contents
-        * @param       string   $source    Source path
-        * @param       string   $dest      Destination path
-        * @param       string   $permissions New folder creation permissions
-        * @return      bool     Returns true on success, false on failure
-        */
 
         // Check for symlinks
         if (is_link($source)){
@@ -125,62 +186,100 @@
         return true;
     }
 
+    /**
+    * Function extracts file name with the extension from the specified string.
+    * 
+    * @param string $fileName
+    * @return string file name with the extension
+    */
     function extract_file_name($fileName){
         return rpart($fileName,'/');  
     }
 
+    /**
+    * Function extracts file name without the extension from the specified string.
+    * 
+    * @param string $fileName
+    * @return string file name without the extension
+    */ 
     function extract_file_name2($fileName){ 
-        //bez extenzije
         $s=extract_file_name($fileName);
         $i=mb_strripos($s, '.');
         return lefts($s,$i);
     }
 
+    /**
+    * Function extracts file extension from the specified string.
+    * 
+    * @param string $fileName
+    * @param boolean $toLowercase
+    * @return string extension
+    */
     function extract_file_ext($fileName, $toLowercase=true){
         $a=explode('.',$fileName); 
         return $toLowercase?mb_strtolower(end($a)):end($a); 
     }
 
+    /**
+    * Function extracts file directory from the specified string.
+    * 
+    * @param mixed $fileName
+    * @return string 
+    */
     function extract_file_dir($fileName){
-
         $i=mb_strripos($fileName, '/');
         return lefts($fileName,$i);  
     }
 
+    /**
+    * Function deletes multilple files using wildcards.
+    * 
+    * @param mixed $str
+    */
     function del_files($str){
-        //deletes multilple files using wildcards
         foreach(glob($str) as $fn){
             unlink($fn);
         }
     }
 
-    function list_files($str){ // D:/images/*.*
-        return glob($str);
+    /**
+    * The list_files function searches for all the pathnames matching pattern.
+    * 
+    * @param mixed $str
+    * @return Returns an array containing the matched files/directories, an empty array if no file matched or FALSE on error.
+    */
+    function list_files($pattern){
+        return glob($pattern);
     }
 
+    /**
+    * The file_to_str function reads the file into a string.
+    * 
+    * @param string $filename
+    */
     function file_to_str($filename){
-        /**
-        * read file to string
-        */
-        /*    $fh = fopen($filename, 'r');
-        $value = fread($fh, filesize($filename));
-        fclose($fh);  
-        return $value;    */
-
         return file_get_contents($filename);
     }
 
+    /**
+    * The str_to_file function writes the file from the string.
+    * 
+    * @param string $filename
+    * @param boolean returns true od successful, false on unsuccessful
+    */
     function str_to_file($filename,$s){
-        /**
-        * save string to file
-        * returns true od successful, false on unsuccessful
-        */
         $fh = fopen($filename, 'w');
         $saved= (fwrite($fh, $s))==false?false:true; 
         fclose($fh);
         return $saved;
     }
 
+    /**
+    * Get file from $url with curl.
+    * 
+    * @param string $url
+    * @return mixed string content or false
+    */
     function curl_get_file_contents($url){
         $c = curl_init();
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
@@ -189,10 +288,15 @@
         curl_close($c);
 
         if ($contents) return $contents;
-        else return FALSE;
+        else return false;
     }
 
-    function get_remote_image_size($image_url) {
+    /**
+    * Function get_remote_image_size reads image size from $url using image header data.
+    * 
+    * @param mixed $image_url
+    */
+    function get_remote_image_size($image_url){
         $count=0;
         $handle = fopen ($image_url, "rb");
         $contents = "";
@@ -218,8 +322,12 @@
         return $gis;
     }
 
-    /* log utils*/
-
+    /**
+    * Function dump is usefull for simple debugging to the file.
+    * 
+    * @param mixed $var
+    * @param mixed $fileName
+    */
     function dump($var=null,$fileName=null){
         $fileName=(is_null($fileName)?'dump '.date('Y-m-d',time()):$fileName);
 
@@ -248,8 +356,13 @@
         file_put_contents($fileName,$result,FILE_APPEND);   
     } 
 
-    /* arrays */
-
+    /**
+    * Function array_split splits the array into the pieces.
+    * 
+    * @param array $array
+    * @param integer $pieces
+    * @return array new array
+    */
     function array_split($array, $pieces=2){
         if ($pieces < 2) 
             return array($array); 
@@ -259,6 +372,13 @@
         return array_merge(array($a),$b); 
     } 
 
+    /**
+    * Function array_chunk_vertical splits the array into the columns.
+    * 
+    * @param mixed $data
+    * @param mixed $columns
+    * @return array new array
+    */
     function array_chunk_vertical($data, $columns) {
         $n = count($data) ;
         $per_column = floor($n / $columns) ;
@@ -280,38 +400,78 @@
         return $tabular ;
     }
 
-    /* datetime utils */
-
-    function now(){ //:timestamp
+    /**
+    * Function now is shortcut to PHP function time.
+    * @return timestamp
+    */
+    function now(){
         return time();
     }
 
-    function format_timestamp($dateFormat, $timestamp){
-        return date($dateFormat, $timestamp);
-    }
-
-    function add_minutes($timestamp,$minutes) {
+    /**
+    * Function add_minutes adds minutes to the given timestamp 
+    * 
+    * @param timestamp $timestamp
+    * @param integer $minutes
+    * @return timestamp
+    */
+    function add_minutes($timestamp, $minutes) {
         return strtotime("+${minutes} minutes", $timestamp);
     }
 
+    /**
+    * Function sub_minutes subtracts minutes from the given timestamp 
+    * 
+    * @param timestamp $timestamp
+    * @param integer $minutes
+    * @return timestamp
+    */
     function sub_minutes($timestamp, $minutes) {
         return strtotime("-${minutes} minutes", $timestamp);
     }
 
-    function add_months($timestamp,$months) {
-        return strtotime("+${months} months", $timestamp);
-    }
-
+    /**
+    * Function add_days add minutes days the given timestamp 
+    * 
+    * @param timestamp $timestamp
+    * @param integer $days
+    * @return timestamp
+    */
     function add_days($timestamp, $days=0) {
         return strtotime("+${days} days", $timestamp);
     }
 
+    /**
+    * Function sub_days subtracts days from the given timestamp 
+    * 
+    * @param timestamp $timestamp
+    * @param integer $days
+    * @return timestamp
+    */
     function sub_days($timestamp, $days) {
         return strtotime("-${days} days", $timestamp);
     }
 
-    function days_between($fromDate, $toDate, $abs=true){
+    /**
+    * Function add_months adds months to the given timestamp 
+    * 
+    * @param timestamp $timestamp
+    * @param integer $months
+    * @return timestamp
+    */
+    function add_months($timestamp, $months) {
+        return strtotime("+${months} months", $timestamp);
+    }
 
+    /**
+    * Function days_between calculates the number of days betwssn two dates.
+    * 
+    * @param mixed $fromDate
+    * @param mixed $toDate
+    * @param mixed $abs
+    * @return integer number of days
+    */
+    function days_between($fromDate, $toDate, $abs=true){
         if ($abs)
             $distanceInSeconds = round(abs($toDate - $fromDate));
         else
@@ -323,36 +483,51 @@
         return $distanceInDays; 
     }
 
+    /**
+    * Function converts the timestamp to mysql datetime string.
+    * 
+    * @param mixed $timestamp
+    * @return string
+    */
     function timestamp_to_mysql_datetime($timestamp){
         return date('Y-m-d H:i:s', $timestamp);
     }
 
+    /**
+    * Function converts the mysql datetime string to timestamp
+    * 
+    * @param mixed $mysql_datetime
+    * @return timestamp
+    */
+    function mysql_datetime_to_timestamp($mysql_datetime){
+        list($date, $time) = explode(' ', $mysql_datetime);
+        list($year, $month, $day) = explode('-', $date);
+        list($hour, $minute, $second) = explode(':', $time);
+        return mktime($hour, $minute, $second, $month, $day, $year);    
+    }
+
+    /**
+    * Function converts the timestamp to mysql date string.
+    * 
+    * @param mixed $timestamp
+    * @return string
+    */
     function timestamp_to_mysql_date($timestamp){
         return date('Y-m-d', $timestamp);
     }
 
+    /**
+    * Function converts the mysql date string to timestamp
+    * 
+    * @param mixed $mysql_date
+    * @return timestamp
+    */
     function mysql_date_to_timestamp($mysql_date){
-        //$a = explode("-",$datetime);
-        //return mktime(0,0,0,$date[1],$date[2],$date[0]); //mktime ima bug, radi do 2032
-
         list($year, $month, $day) = explode('-', $mysql_date);
-
         return mktime(0, 0, 0, $month, $day, $year); 
     }
 
-    function mysql_datetime_to_timestamp($mysql_datetime){
-        /*   $val = explode(" ",$mysql_datetime);
-        $date = explode("-",$val[0]);
-        $time = explode(":",$val[1]);
-        return mktime($time[0],$time[1],$time[2],$date[1],$date[2],$date[0]);     */
-
-        list($date, $time) = explode(' ', $mysql_datetime);
-        list($year, $month, $day) = explode('-', $date);
-        list($hour, $minute, $second) = explode(':', $time);
-
-        return mktime($hour, $minute, $second, $month, $day, $year);    
-    }
-
+    /*
     function format_mysql_datetime($dateFormat, $datetime){
         return date($dateFormat, mysql_datetime_to_timestamp($datetime));
     } 
@@ -360,7 +535,14 @@
     function format_mysql_date($dateFormat, $date){
         return date($dateFormat, mysql_date_to_timestamp($date));
     } 
+    */
 
+    /**
+    * Function time_elapsed_string creates the string containing textual representation of the period.
+    * 
+    * @param mixed $ptime
+    * @return string
+    */
     function time_elapsed_string($ptime) {
         $etime = time() - $ptime;
 
@@ -385,27 +567,57 @@
         }
     }
 
-    /* numbers */
-
+    /**
+    * The function examines whether the number is odd or not.
+    *   
+    * @param mixed $num
+    * @return boolean
+    */
     function is_odd($num){
         return( $num & 1 );
     }
 
+    /**
+    * Function is a shortcut to PHP function round.
+    * 
+    * @param mixed $d
+    * @param integer $precision
+    */
     function round_float($d, $precision=2){
         return round($d, $precision); 
     }
 
-    /* url */
+    /* url handling*/
 
+    /**
+    * Base64 encoding suitable for encoding url parameters
+    * Taken from: http://php.net/manual/en/function.base64-encode.php
+    * 
+    * @param string $data
+    * @return string
+    */
     function base64url_encode($data){ 
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '='); 
     } 
 
+    /**
+    * Base64 decoding suitable for decoding url parameters
+    * Taken from: http://php.net/manual/en/function.base64-encode.php
+    * 
+    * @param string $data
+    * @return string
+    */
     function base64url_decode($data){ 
         return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT)); 
     } 
 
-
+    /**
+    * Function converts the string in a form convenient for use in the url
+    * Taken from: http://stackoverflow.com/questions/2955251/php-function-to-make-slug-url-string
+    * 
+    * @param mixed $text
+    * @return string
+    */
     function slugify($text){
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
@@ -432,57 +644,31 @@
         return $text;
     }
 
-    /*  function m($template, $params){
-
-    require_once (C_LIBRARY.'/mustache/mustache.php'); 
-    //require_once (C_LIBRARY.'/Mustache/Autoloader.php'); 
-    $m = new Mustache_Engine;
-    return $m->render($template, $params);
-    }     */
-
-    function m($template, $params){
-        $tagRegex = "|{{{(.*?)}}}|is";
-        return preg_replace_callback(
-            $tagRegex,
-            function ($matches) use ($params) {
-                if (key_exists($matches[1], $params))
-                    return $params[$matches[1]];
-                else
-                    return '';
-            },
-            $template
-        );
-    }
-
-    function unique_id(){
-        //vraća string duljine 40 karaktera
-        return sha1(uniqid(mt_rand(), true));   
-    }
-
-    /*
-    function eval_php_tags($string){
-    return  preg_replace_callback(
-    '/<\?php(.+?)\?>/is',
-    function ($matches) {
-    ob_start();
-    eval($matches[1]);
-    $result = ob_get_contents();
-    ob_get_clean(); 
-    return $result;
-    },
-    $string
-    );
-    }
+    /**
+    * Checks and sets the url scheme if missing
+    * 
+    * @param string $url
+    * @return string
     */
-
-    function fix_url($url){
-        if  ( $ret = parse_url($url) ) {
-
+    function fix_url_scheme($url){
+        if  ( $ret = parse_url($url) ){
             if ( !isset($ret["scheme"]) )
             {
                 $url = "http://{$url}";
             }
         }   
-
         return $url;
+    }
+
+    /**
+    * Generates random color
+    * 
+    */
+    function rand_color(){
+        mt_srand((double)microtime()*1000000);
+        $c = '';
+        while(strlen($c)<6){
+            $c .= sprintf("%02X", mt_rand(100, 200));
+        }
+        return $c;
     }
