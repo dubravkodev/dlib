@@ -1,0 +1,33 @@
+
+/*\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+radio
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\*/
+.radio {
+    margin-bottom: 6px;
+    margin-top: 0;
+label{
+    padding-left: 0;  
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type=radio] + span:before {
+    font-family: 'Ionicons';
+    display: inline-block;
+    font-size: 21px;
+    letter-spacing: 5px;
+}
+
+input[type=radio] + span:before { content: "\f3a6"; } /* unchecked icon */
+
+ input[type=radio]:checked + span:before { content: "\f3a7"; } /* checked icon */
+
+input[type=radio]:disabled + span:before{
+    color:#cccccc;   
+}
+
+input[type="radio"]:checked+span{ font-weight: 600; 
+} 
+}

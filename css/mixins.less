@@ -1,0 +1,85 @@
+.function-animate(){
+    will-change: opacity;
+    transition-property: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    transition-delay: 0s; 
+}
+
+.fuction-controls(@bg_color, @color:@white){
+
+.bootstrap-select li.selected a{
+    background-color: @bg_color;
+    color:@color; 
+}
+
+div.bootstrap-datetimepicker-widget{
+   li.accordion-toggle table tbody tr td a {
+        color:@bg_color;
+    }
+    table {
+    td.day.active{
+    background-color: @bg_color;  
+    color:@color; 
+}
+td.today:before{
+    border-bottom-color: @bg_color; 
+}}}
+
+.grid-view ul.yiiPager{
+    .selected a{
+    background-color: @bg_color;
+    color:@color; 
+}
+a{
+    border:0;
+    //.function-animate();
+    &:hover, &:focus, &:active{
+    background-color: @bg_color;
+    color:@color; 
+}}}
+
+.btn-group-crud{
+    a{
+    //.function-animate();
+    &:hover, &:focus, &:active{
+    background-color: @bg_color;
+    color: @color;
+}}}
+
+.bootstrap-switch-container{
+    .bootstrap-switch-primary{
+    background-color: @bg_color;
+    color: @color;
+}}
+
+a.btn { 
+    &.btn-panel{
+    .function-btn(@bg_color, @color);
+    min-width: 80px;
+}}
+}
+
+
+.function-panel(@bg_color, @color:@white){
+    background-color: @bg_color;
+
+    .panel-title{
+    color:@color;
+}
+
+.panel-toolbar a{
+    color:@color;
+} 
+
+.panel-body{
+    background-color: #fff; 
+}
+
+.panel-help-overflow{
+    color:@color;   
+}
+
+.fuction-controls(@bg_color, @color);
+
+}

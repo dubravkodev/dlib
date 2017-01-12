@@ -1,0 +1,263 @@
+/*\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+panel-material
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\*/
+.panel-group .panel{  /* accordian */
+    border-radius:2px;  
+}
+
+.panel-material{
+    border-width:0 3px 3px 3px; 
+    //border-width:0;
+    border-radius:2px; 
+    //box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.07); 
+    border-style: solid;
+
+
+    .panel-heading{
+    margin:0;
+    padding:0;
+    border: 0;
+    height: 56px;
+    display: table;
+    width:100%;
+
+    h3.panel-title{
+    margin:0;
+    padding:0 0 0 15px;
+    display: table-cell;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 15px;  /*16px*/
+    text-transform: uppercase;
+    //font-weight: 600;
+    /* line-height: 64px;  problem, ako je postavljeno onda je problem kod uskog prikaza, inače nije u ravnini s badgeom */
+    span.badge{
+    margin: -3px 0 0 10px;
+    font-size:125%; 
+    position: absolute; 
+}
+}
+
+.panel-toolbar{
+    padding: 0 8px 0 0;
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+    white-space: nowrap; /* obavezno da ikone ne idu u novi red*/
+
+    a.btn-panel-toolbar{
+    margin:0;
+    outline: 0;
+    width: 32px;
+    height:56px;
+    line-height:56px;
+    font-size:18px;
+    text-align: center;
+    display:inline-block;
+    cursor: pointer;  
+}
+
+a.btn-panel-toolbar:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    will-change: opacity;
+    transition-property: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    transition-delay: 0s;
+}
+
+a.panel-toggle{
+    text-decoration:none;   
+
+    &:after{
+    font-family: 'Ionicons'; 
+    content: "\f126";
+}     
+
+&.collapsed:after{
+    font-family: 'Ionicons'; 
+    content: "\f123"; 
+}
+}  
+
+
+form.form-panel-toolbar{
+    display:inline-block;
+    
+    vertical-align: middle;
+    
+    .form-group{
+    margin-bottom: 0;   
+    display:inline-block;
+
+.bootstrap-select{
+    background-color: transparent;
+
+}
+
+.bootstrap-select>button.btn{
+    width: 90px;
+    transition: none none;
+    background-color: transparent;
+    border-color:#222;
+    padding-top:4px;
+    padding-bottom:4px;
+}
+}
+}
+
+
+
+
+div.btn-group{ //ovo mora biti jer inače nije ikona button grupe nije poravnana u toolbaru
+    vertical-align: top;   
+} 
+} /* /.panel-toolbar */
+} /* /.panel-heading */
+
+.panel-header{
+    background-color: #fff;
+} 
+
+.panel-help{
+    /* prazno! */
+
+    .panel-help-overflow{
+    overflow-y: auto; 
+    max-height:250px;
+    text-align: left;
+    margin: 0;
+    padding: 10px 15px 10px 15px;
+    border-width:1px 0 0 0;
+    border-style: solid;
+    font-size:13px; /*14px*/  
+}
+
+.panel-help-overflow hr{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.panel-help-overflow a{
+    color:#fff;
+    text-decoration: underline;
+}
+} /* /.panel-help */
+
+.panel-filter{
+    /* prazno! */
+
+    .panel-filter-overflow{
+    background-color: #DDDDDD;
+    color:#000;
+    *overflow-y: auto; /* ne */
+    *max-height:250px;
+    text-align: left;
+    margin: 0;
+    padding:10px 15px;
+
+    /*border-width:0 0 2px 0;
+    border-style: dashed;
+    border-color:#fff; */
+}
+
+.panel-filter-overflow .col-sm-3,
+.panel-filter-overflow .col-sm-4{
+    border-width:0 1px 0 0;
+    border-style: solid;
+    border-color:#fff;   
+} 
+} /* /.panel-filter */ 
+
+
+
+.panel-body{
+    padding:0px;   
+}
+
+
+
+
+
+
+/*\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+btn-group-crud
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\*/
+.btn-group-crud{
+    font-size: 17px;
+    padding: 0;
+    margin:0;
+    white-space: nowrap;
+
+    a {
+    color:#999;
+    /*border-width:1px;
+    border-color:#cccccc;
+    border-style:solid;*/
+    outline:0;
+    padding: 0;
+    margin:0;
+    display:inline-block;
+    width:25px;
+    height:25px;
+    line-height:25px;
+    //border-radius:50%; 
+    border-radius:2px; 
+    text-align:center;
+    //margin-left:1px;
+}
+
+a:hover{
+    background-color: rgba(125, 125, 125, 0.2);
+}
+
+i.btn-group-ion-disabled{
+    color:#999;
+    padding: 0;
+    margin:0;
+    display:inline-block;
+    width:25px;
+    height:25px;
+    line-height:25px;
+    //border-radius:50%; 
+    border-radius:2px; 
+    text-align:center;
+}
+
+}
+
+} /* /.panel-material */
+
+
+
+
+
+form.form-white .form-group .bootstrap-select > button.btn{
+    color:white;
+    border-color:white !important;   
+}
+
+
+
+
+
+
+/*\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+panel-material kao bootstrap modal
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\*/
+#dynamicModal div.panel-material {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);   
+}
+
+
+.panel-splitter{
+    text-align: center;
+    font-size:12px;
+    background-color:#eee;
+    display:block;
+}
+
+a.panel-splitter{
+    color:#121212;
+    outline:none;
+}

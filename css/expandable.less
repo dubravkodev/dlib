@@ -1,0 +1,151 @@
+/*\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+panel-expandable
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\*/
+
+.panel-expandable{
+    border-width:1px; 
+    border-radius:2px; 
+    //box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.07); 
+    box-shadow:none;
+    border-style: solid;
+    border-color:#CCCCCC;
+    margin-bottom:8px;
+
+
+   a.panel-heading{
+    margin:0;
+    padding:0;
+    border: 0;
+    height: 46px;
+    display: table;
+    width:100%;
+    outline:none;
+    background-color:#F6F6F6;
+
+    &:hover, &:focus, &:active, {  
+        text-decoration:none;
+    }
+    
+    span.panel-title{
+    margin:0;
+    padding:0 0 0 15px;
+    display: table-cell;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 15px;  /*16px*/
+    text-transform: uppercase;
+    //font-weight: 600;
+    /* line-height: 64px;  problem, ako je postavljeno onda je problem kod uskog prikaza, inače nije u ravnini s badgeom */
+    span.badge{
+    margin: -3px 0 0 10px;
+    font-size:125%; 
+    position: absolute; 
+}
+}
+
+.panel-toolbar span.panel-toggle{
+    text-decoration:none;   
+
+    &:after{
+    font-family: 'Ionicons'; 
+    content: "\f12a"; 
+    color:#CCCCCC;
+} 
+}
+
+&.collapsed .panel-toolbar span.panel-toggle:after{
+    font-family: 'Ionicons'; 
+    content: "\f218";
+    color:#CCCCCC;
+}
+
+&.collapsed{
+    background-color: #fff;
+}
+
+
+
+
+
+.panel-toolbar{
+    padding: 0 8px 0 0;
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+    white-space: nowrap; /* obavezno da ikone ne idu u novi red*/
+
+ /*   a.btn-panel-toolbar{
+    margin:0;
+    outline: 0;
+    width: 32px;
+    height:56px;
+    line-height:56px;
+    font-size:18px;
+    text-align: center;
+    display:inline-block;
+    cursor: pointer;  
+}
+
+a.btn-panel-toolbar:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    will-change: opacity;
+    transition-property: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    transition-delay: 0s;
+}*/
+
+
+
+
+
+
+
+
+
+div.btn-group{ //ovo mora biti jer inače nije ikona button grupe nije poravnana u toolbaru
+    vertical-align: top;   
+} 
+} /* /.panel-toolbar */
+} /* /.panel-heading */
+
+.panel-body{
+    padding:0px;
+    background-color:#F6F6F6;
+}
+
+.panel-header{
+    //background-color: #fff;
+} 
+
+.panel-help{
+    /* prazno! */
+
+    .panel-help-overflow{
+    overflow-y: auto; 
+    max-height:250px;
+    text-align: left;
+    margin: 0;
+    padding: 10px 15px 10px 15px;
+    border-width:1px 0 0 0;
+    border-style: solid;
+    font-size:13px; /*14px*/  
+}
+
+.panel-help-overflow hr{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.panel-help-overflow a{
+    color:#fff;
+    text-decoration: underline;
+}
+} /* /.panel-help */
+
+
+
+} /* /.panel-material */
+
+
+

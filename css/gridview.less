@@ -1,0 +1,217 @@
+.grid-view-loading{
+    background-image: url(preloader.gif);
+    background-repeat: no-repeat;
+}
+
+.grid-view
+{
+    /*padding: 15px 0; */
+}
+
+.grid-view table.items
+{
+    width: 100%;
+    /*background: white;
+    border-collapse: collapse;
+    border: 1px #D0E3EF solid;    */
+}
+
+.grid-view table.items-fixed
+{
+    table-layout: fixed;
+}
+
+.grid-view table.items th:first-child,.grid-view table.items td:first-child{
+    padding-left:15px; /* prva kolona */
+} 
+
+.grid-view table.items th:last-child,.grid-view table.items td:last-child{
+    padding-right:8px; /* zadnja kolona */
+}
+
+.grid-view table.items th, .grid-view table.items td
+{
+    border-bottom:1px solid #DDDDDD; 
+    padding:8px;
+}
+
+.grid-view table.items tr:last-child td /* maknemo zadnju liniju dolje */
+{
+    border-bottom:0;
+}
+
+.grid-view table.items thead tr th{
+    vertical-align: middle;
+}
+
+.grid-view table.items th
+{
+    /*color: white;
+    background: url("bg.gif") repeat-x scroll left top white;
+    text-align: center;*/
+}
+
+.grid-view table.items th a
+{
+    /*color: #EEE;
+    font-weight: bold;
+    text-decoration: none;*/
+}
+
+.grid-view table.items th a:hover
+{
+    /*color: #FFF; */
+}
+
+.grid-view table.items th a.asc
+{
+    /*background:url(gridview_up.gif) right center no-repeat;
+    padding-right: 10px; */
+}
+
+.grid-view table.items th a.desc
+{
+    /* background:url(gridview_down.gif) right center no-repeat;
+    padding-right: 10px; */
+}
+
+.grid-view table.items tr.even
+{
+    /*background: #F8F8F8; */
+}
+
+.grid-view table.items tr.odd
+{
+    /*background: #E5F1F4;*/
+}
+
+.grid-view table.items tr.selected
+{
+    /*background: #E0E0E0;*/ 
+    background: #ddd;
+}
+
+.grid-view table.items tr:hover.selected
+{
+    /*background: #666; */
+}
+
+.grid-view table.items tbody tr:hover
+{
+    /*background: #337AB7;   */
+}
+
+.grid-view .link-column img
+{
+    border: 0;
+}
+
+.grid-view .button-column
+{
+    /*text-align: center;
+    width: 60px;   */
+}
+
+.grid-view .button-column img
+{
+    border: 0;
+}
+
+.grid-view .checkbox-column
+{
+    width: 15px;
+}
+
+.grid-view .summary
+{
+    margin: 0 0 5px 0;
+    text-align: right;
+}
+
+.grid-view .empty{
+    font-style: italic;
+    display:inline-block;
+    padding: 8px 15px;
+}
+
+.grid-view .filters input,
+.grid-view .filters select
+{
+    /*width: 100%;
+    border: 1px solid #ccc; */
+}
+
+.grid-view table.items  tr  th
+{
+    vertical-align: bottom;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: #dddddd;
+}
+
+
+
+
+
+
+
+
+
+
+
+div.pager{
+    text-align:center;
+    margin:5px 0 20px 0;
+    height:32px;
+    padding:0 5px; 
+}
+
+ul.yiiPager{
+    border:0;
+    line-height:100%;
+    display:inline;
+    margin:0;
+    padding:0;
+}
+
+ul.yiiPager li{
+    display:inline;
+}
+
+ul.yiiPager a:link,ul.yiiPager a:visited{
+    border:solid 1px #cccccc;
+    color:inherit;
+    font-weight:bold;
+    text-decoration:none;
+    padding:6px 12px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;  
+}
+
+ul.yiiPager .page a{
+    font-weight:600;
+}
+
+ul.yiiPager a:hover{
+    color:#fff;
+    border:solid 1px blue;
+    background: blue;
+}
+
+ul.yiiPager .selected a{
+    color:#fff;
+    font-weight:bold;
+    border:solid 1px blue;
+    background: blue;
+}
+
+ul.yiiPager .hidden a{
+    border:1px solid #ccc;
+    color:inherit;
+}
+
+ul.yiiPager .first,ul.yiiPager .last{
+    display:none;
+}
+
