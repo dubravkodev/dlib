@@ -672,3 +672,12 @@
         }
         return $c;
     }
+
+    function normal_dir($dir){
+        $c=rights($dir,1);
+        if (in_array($c, ['\\', '/'])){
+            return $dir;
+        }
+        else
+            return $dir.DIRECTORY_SEPARATOR;   
+    }

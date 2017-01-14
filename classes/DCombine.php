@@ -9,73 +9,47 @@
             $sources=[];
 
             foreach ($includes as $i){
-                include(C_LIBRARY ."/sources/${i}.php");  //ne include_once
+                $sources[]=(include C_LIBRARY ."/sources/${i}.php");
             }
+            $sources[]=$sourceEx;
+            $sources= call_user_func_array('array_merge_recursive', $sources);
 
-            $sources=array_merge($sources, $sourceEx);
+            self::less_init($sources['less']);
 
-            self::less_init($sources);
-
-            $r1=self::js_init($sources, $dir, $id);
-            $r2=self::css_init($sources, $dir, $id, true); 
+            $r1=self::js_init($sources['js'], $dir, $id);
+            $r2=self::css_init($sources['css'], $dir, $id); 
 
             if($r1 || $r2){ 
-                self::copy_init($sources, $dir);
+                self::copy_init($sources['copy'], $dir);
                 $result=true;
             }  
             return $result;
         }
 
         private static function copy_init($sources, $output_dir){
-            //$files=array();
             foreach ($sources as $source){
-                $command=$source[0];
-
-                if ($command==='copy'){
-                    $source_filename=$source[1];
-                    $target_filename=$output_dir.$source[2];
-                    if (! file_exists($source_filename))
-                        die('Not found: '.$source_filename);
-                    //
-                    xcopy($source_filename, $target_filename); 
+                $source_filename=$source['source'];
+                $target_filename=$output_dir.$source['target'];
+                $params=isset($source['options'])?$source['options']:'';
+                if (! file_exists($source_filename))
+                    die('Not found: '.$source_filename);
+                //
+                if (file_exists(self::robocopy)){
+                    exec(self::robocopy.' "'.$source_filename.'" "'.$target_filename.'" '.$params);
                 }
-                else if ($command==='robocopy'){
-                    $source_filename=$source[1];
-                    $target_filename=$output_dir.$source[2];
-                    $params=isset($source[3])?$source[3]:'';
-                    if (! file_exists($source_filename))
-                        die('Not found: '.$source_filename);
-                    //
-                    if (file_exists(self::robocopy)){
-                        exec(self::robocopy.' "'.$source_filename.'" "'.$target_filename.'" '.$params);
-                    }
-                    else
-                    {
-                        xcopy($source_filename, $target_filename); 
-                    }
+                else
+                {
+                    xcopy($source_filename, $target_filename); 
                 }
             }
         }
 
         private static function js_init($sources, $dir, $id){
-            $files=array();
-            foreach ($sources as $source){
-                if ($source[0]=='js'){
-                    $files[]=$source[1];
-                    if (! file_exists($source[1])){
-                        die('Not found: '.$source[1]);
-                    }
-                }
-            }
-            return self::js_combine($files, $dir, $id);
-        }
-
-        private static function js_combine($files, $dir, $id){
             require_once(C_LIBRARY."/php/JShrink/src/JShrink/Minifier.php");
 
             $x = '';
-            foreach($files as $file){ 
-                $x.= (string)filemtime($file);
+            foreach($sources as $source){ 
+                $x.= (string)filemtime($source['source']);
             }
             $md5=md5($x);
 
@@ -90,29 +64,25 @@
 
                 $table=array();
                 $js = '';
-                foreach($files as $file){ 
-                    if (strpos($file,'min.js')!=0){ 
-                        $j= file_get_contents($file); 
+                foreach($sources as $source){ 
+                    if (strpos($source['source'],'min.js')!=0){ 
+                        $j= file_get_contents($source['source']); 
 
                         $js .=$j;
-                        $table[]=array(extract_file_name($file), mb_strlen($j),'');   
+                        $table[]=array(extract_file_name($source['source']), mb_strlen($j),'');   
                     } 
                     else{  
-                        $j= \JShrink\Minifier::minify(file_get_contents($file));
+                        $j= \JShrink\Minifier::minify(file_get_contents($source['source']));
                         $js .=$j;
-                        $table[]=array(extract_file_name($file), filesize($file),  mb_strlen($j));  
+                        $table[]=array(extract_file_name($source['source']), filesize($source['source']),  mb_strlen($j));  
                     }      
                     $js .=';';     
                 }
 
-
-
-
-
                 $header=array();
                 $header[]='/*!';
                 $header[]=str_pad('', 64,chr(151));
-                $header[]='|'.str_pad('Infoplus JS Compactor',62,' ', STR_PAD_BOTH).'|'; 
+                $header[]='|'.str_pad('dubravko.dev javascript compactor',62,' ', STR_PAD_BOTH).'|'; 
                 $header[]=str_pad('', 64,chr(151));
                 $header[]='|'.str_pad('File Name',40).'|'.str_pad('Orig. size',10,' ',STR_PAD_LEFT).'|'.str_pad('Comp. size',10,' ',STR_PAD_LEFT).'|'; 
                 $header[]=str_pad('', 64,chr(151));
@@ -122,17 +92,6 @@
                 $header[]=str_pad('', 64, chr(151));
                 $header[]='*/';
                 $header[]='';
-
-
-
-
-
-
-
-
-
-
-
 
                 file_put_contents($output_file, implode("\n",$header).$js);
                 // file_put_contents($md5_file, $md5); 
@@ -149,86 +108,69 @@
         } 
 
         private static function less_init($sources){
-            $files=array();
             foreach ($sources as $source){
-                if ($source[0]=='less'){
-                    if (! file_exists($source[1]))
-                        die('Not found: '.$source[1]);
-                    self::less_compile($source);
-                }
+                if (! file_exists($source['source']))
+                    die('Not found: '.$source['source']);
+                self::less_compile($source);
             }
         }
 
         private static function less_compile($source){
-            require_once(C_LIBRARY."/php/lessphp/lessc.inc.php");
-            
-            self::autoCompileLess($source[1], $source[2]);
-           /*$less = new lessc;
-            $less->setImportDir(array(C_LIBRARY));
-            $less->checkedCompile($source[1], $source[2]);*/
-           //$less->compileFile($source[1], $source[2]);
-        }
-        
-        private static function autoCompileLess($inputFile, $outputFile) {
-  // load the cache
-  $cacheFile = $inputFile.".cache";
+            require_once(C_LIBRARY."/php/lessphp/lessc.inc.php"); 
 
-  if (file_exists($cacheFile)) {
-    $cache = unserialize(file_get_contents($cacheFile));
-  } else {
-    $cache = $inputFile;
-  }
+            $inputFile=$source['source'];
+            $outputFile=$source['target'];
 
-  $less = new lessc;
-  $less->setImportDir(array(C_LIBRARY));
-  $newCache = $less->cachedCompile($cache);
+            // load the cache
+            $cacheFile = $inputFile.".cache";
 
-  if (!is_array($cache) || $newCache["updated"] > $cache["updated"]) {
-    file_put_contents($cacheFile, serialize($newCache));
-    file_put_contents($outputFile, $newCache['compiled']);
-  }
-}
-
-        private static function css_init($sources, $dir, $id, $dataURI=false){
-            $files=array();
-            foreach ($sources as $source){
-                if ($source[0]=='css'){
-                    $files[]=$source[1];
-                    if (! file_exists($source[1]))
-                        die('Not found: '.$source[1]);
-                }
+            if (file_exists($cacheFile)) {
+                $cache = unserialize(file_get_contents($cacheFile));
+            } else {
+                $cache = $inputFile;
             }
-            return self::css_combine($files, $dir, $id, $dataURI);
-        }    
 
-        private static function css_combine($files, $dir, $id, $dataURI=false){
+            $less = new lessc;
+            $less->setImportDir(array(C_LIBRARY));
+            $newCache = $less->cachedCompile($cache);
+
+            if (!is_array($cache) || $newCache["updated"] > $cache["updated"]) {
+                file_put_contents($cacheFile, serialize($newCache));
+                file_put_contents($outputFile, $newCache['compiled']);
+            }
+        }
+
+        private static function css_init($sources, $dir, $id){
             require_once(C_LIBRARY."/php/cssmin/cssmin.php");
 
             $x=''; 
 
 
             /**** md5 slika! ****/
-            if ($dataURI){
-
-                foreach($files as $file){ 
-                    $css = file_get_contents($file);
-                    preg_match_all('/url\((.*)\)/',$css,$matches);
+            foreach($sources as $source){ 
+                $dataURI=isset($source['dataURI']) and ($source['dataURI']===true); 
+                if ($dataURI){
+                    $css = file_get_contents($source['source']);
+                    preg_match_all('/url\((.*)\)/',$css, $matches);
 
                     foreach ($matches[0] as $match){
                         $vowels = array("'", '\"', '"', 'url(', ')');   
-                        $s = str_replace($vowels, "", $match);
+                        $image_name = str_replace($vowels, "", $match);
 
-                        $i=mb_strripos($file, '/');
-                        $image_name=substr($file,0,$i).'/'.$s;
-
-                        if (file_exists($image_name))  {
-
-
-                            $ext=extract_file_ext($image_name); 
-
-                            if (self::valid_ext($ext)){
-                                $x.= (string)filemtime($image_name); 
-                            }   
+                        $ext=extract_file_ext($image_name); 
+                        if (self::valid_ext($ext)){
+                            $result=self::image_file($image_name, $source);
+                            if ($result!==false){
+                                $size=filesize($result); 
+                                $dataURI_max_filesize=isset($source['dataURI_max_filesize'])?$source['dataURI_max_filesize']:10000;
+                                if ($size<$dataURI_max_filesize){   
+                                    $x.= (string)filemtime($result); 
+                                }
+                            } 
+                            else
+                            {
+                                die("Image not found: '$image_name' in '".$source['source']."'"); 
+                            } 
                         } 
                     }
                 }
@@ -236,10 +178,8 @@
 
 
 
-
-
-            foreach($files as $file){ 
-                $x.= (string)filemtime($file);
+            foreach($sources as $source){ 
+                $x.= (string)filemtime($source['source']);
             }
             $md5=md5($x);
 
@@ -256,40 +196,41 @@
 
                 $output_css='';
                 $compressor = new CSSmin(); 
-                foreach($files as $file){ 
-                    if (strpos($file,'min.css')!=0) 
+                foreach($sources as $source){ 
+                    $dataURI=isset($source['dataURI']) and ($source['dataURI']===true); 
+                    //
+                    if (strpos($source['source'],'min.css')!=0) 
                     {
-                        $css = file_get_contents($file);  
+                        $css = file_get_contents($source['source']);  
                         $output_css.=$css;  
 
-                        $table[]=array(extract_file_name($file), mb_strlen($css),'');  
+                        $table[]=array(extract_file_name($source['source']), mb_strlen($css),'', '');  
                     }
                     else
                     {   
                         if ($dataURI)
-                            $css = self::uri_file_get_contents($file);  
+                            $css = self::uri_file_get_contents($source);  
                         else     
-                            $css = file_get_contents($file);
+                            $css = file_get_contents($source['source']);
                         //
                         $css = $compressor->run($css); 
                         $output_css.=$css;
 
-                        $table[]=array(extract_file_name($file), filesize($file),  mb_strlen($css));  
+                        $table[]=array(extract_file_name($source['source']), filesize($source['source']),  mb_strlen($css), $dataURI?'Yes':'');  
                     } 
                 }
 
-
                 $header=array();
                 $header[]='/*!';
-                $header[]=str_pad('', 64,chr(151));
-                $header[]='|'.str_pad('Infoplus CSS Compactor',62,' ', STR_PAD_BOTH).'|'; 
-                $header[]=str_pad('', 64,chr(151));
-                $header[]='|'.str_pad('File Name',40).'|'.str_pad('Orig. size',10,' ',STR_PAD_LEFT).'|'.str_pad('Comp. size',10,' ',STR_PAD_LEFT).'|'; 
-                $header[]=str_pad('', 64,chr(151));
+                $header[]=str_pad('', 72, chr(151));
+                $header[]='|'.str_pad('dubravko.dev css compactor',71,' ', STR_PAD_BOTH).'|'; 
+                $header[]=str_pad('', 72,chr(151));
+                $header[]='|'.str_pad('File Name',40).'|'.str_pad('Orig. size',10,' ',STR_PAD_LEFT).'|'.str_pad('Comp. size',10,' ',STR_PAD_LEFT).'|'.str_pad('dataURI',7,' ',STR_PAD_LEFT).'|'; 
+                $header[]=str_pad('', 72,chr(151));
                 for ($i = 0; $i <= count($table)-1 ; $i++) {
-                    $header[]='|'.str_pad($table[$i][0],40).'|'.str_pad($table[$i][1],10,' ',STR_PAD_LEFT).'|'.str_pad($table[$i][2],10,' ',STR_PAD_LEFT).'|';              
+                    $header[]='|'.str_pad($table[$i][0],40).'|'.str_pad($table[$i][1],10,' ',STR_PAD_LEFT).'|'.str_pad($table[$i][2],10,' ',STR_PAD_LEFT).'|'.str_pad($table[$i][3],7,' ',STR_PAD_BOTH).'|';              
                 }
-                $header[]=str_pad('', 64, chr(151));
+                $header[]=str_pad('', 72, chr(151));
                 $header[]='*/';
                 $header[]='';
 
@@ -300,37 +241,52 @@
                 return false;
         }
 
-        private static function uri_file_get_contents($file){
-            $css=file_get_contents($file);
+        private static function uri_file_get_contents($source){
+            $css=file_get_contents($source['source']);
 
             return preg_replace_callback( '/url\((.*)\)/', 
-                function($m) use ($file) { return self::preg_replacex($m[0], $file); },
+                function($m) use ($source) { return self::preg_replacex($m[0], $source); },
                 $css); 
         }
 
-        private static function preg_replacex($source, $css_file) {
-
+        private static function preg_replacex($match, $source) {
             $vowels = array("'", '\"', '"', 'url(', ')');
-            $s = str_replace($vowels, "", $source);
+            $image_name = str_replace($vowels, "", $match);
 
-
-            $i=mb_strripos($css_file, '/');
-            $image_name=substr($css_file,0,$i).'/'.$s;
-            if (file_exists($image_name))
-            {
-                // $i= strripos($image_name, '.');
-                // $ext=strtolower(substr($image_name,$i+1,strlen($image_name)-$i));
-                $ext=extract_file_ext($image_name); 
-                $size=filesize($image_name); 
-                if (self::valid_ext($ext) and ($size<10000) ){ //veće slike od 10kb izostavljamo iz kompresije    (strpos($image_name,'!')===false)
-                    return "url(data:image/${ext};base64,".base64_encode(file_get_contents($image_name)).')';
+            $ext=extract_file_ext($image_name); 
+            if (self::valid_ext($ext)){
+                $result=self::image_file($image_name, $source);
+                if ($result!==false){
+                    $size=filesize($result);
+                    $dataURI_max_filesize=isset($source['dataURI_max_filesize'])?$source['dataURI_max_filesize']:10000;
+                    if ($size<$dataURI_max_filesize){ 
+                        return "url(data:image/${ext};base64,".base64_encode(file_get_contents($result)).')';
+                    }
+                    {
+                        return "url('${image_name}')";     
+                    }
                 }
-                {
-                    return "url('${s}')";     
-                }
+                else    
+                    return "url('${image_name}')";
             }
-            else    
-                return "url('${s}')";
+        }
+
+        private static function image_file($image_name, $source){
+            $search_paths=array();
+            $search_paths[]=extract_file_dir($source['source']);
+
+            if (isset($source['dataURI_search_paths'])){
+                $search_paths=array_merge($search_paths, $source['dataURI_search_paths']);
+            }
+
+            foreach ($search_paths as $search_path)
+            {
+                $file=normal_dir($search_path).$image_name;
+                if (file_exists($file)){
+                    return $file;
+                }  
+            }
+            return false;
         }
 
 }

@@ -14,21 +14,21 @@
     {
 
         /* q is the alias of queryAll - returns false if no result */
-        public static function q($sql, $params=array()){
+        public static function query($sql, $params=array()){
             $connection=Yii::app()->db;
             $command=$connection->createCommand($sql);
             return $command->queryAll(true, $params);
         }
 
         /* r is the alias of queryRow - returns false if no result */
-        public static function r($sql, array $params=array()){
+        public static function row($sql, array $params=array()){
             $connection=Yii::app()->db;
             $command=$connection->createCommand($sql);
             return $command->queryRow(true, $params); 
         }   
 
         /* e is the alias of execute - returns number of rows affected by the execution */
-        public static function e($sql, $params=array()){
+        public static function exec($sql, $params=array()){
             $connection=Yii::app()->db;
             $command=$connection->createCommand($sql);
             return $command->execute($params); 
@@ -56,7 +56,7 @@
 
             $sql="SELECT Count(*) as n FROM `${table}` ".$w;  
 
-            $record=self::r($sql, $params);
+            $record=self::row($sql, $params);
             
             return ($record['n']===null)?0:(int)$record['n'];
         } 
@@ -82,12 +82,12 @@
                 $w='';
 
             $sql="SELECT max(`${field}`) as n FROM `${table}` ".$w;   
-            $record=self::r($sql, $params);
+            $record=self::row($sql, $params);
             
             return ($record['n']===null)?0:(int)$record['n'];
         } 
         
-                public static function sum($table, $field, $where=array()){ 
+            public static function sum($table, $field, $where=array()){ 
             $x=array();
             $params=array(); 
             $i=1;
@@ -108,7 +108,7 @@
                 $w='';
 
             $sql="SELECT sum(`${field}`) as n FROM `${table}` ".$w;   
-            $record=self::r($sql, $params);
+            $record=self::row($sql, $params);
             
             return ($record['n']===null)?0:(int)$record['n'];
         } 
@@ -143,7 +143,7 @@
 
             $sql="INSERT ${ignore_str}INTO `${table}` (".implode(',',$x).") VALUES (".implode(',',$y).") ".$u;
 
-            return self::e($sql, $params);
+            return self::exec($sql, $params);
         } 
 
         public static function update($table, $data=array(), $where=array()){
@@ -175,7 +175,7 @@
 
             $sql="UPDATE `${table}` SET ".implode(',',$x).' '.$w;
 
-            return self::e($sql, $params);     
+            return self::exec($sql, $params);     
         }
 
         /* summer 2012 */
@@ -198,7 +198,7 @@
             } 
 
             $sql="DELETE FROM `${table}` ".$w;
-            return self::e($sql, $params);     
+            return self::exec($sql, $params);     
         }
 
         public static function fields($table, $fields, $where=array()){ 
@@ -228,54 +228,14 @@
                 $w='';
 
             $sql="SELECT $f FROM `${table}` ".$w;
-            return self::r($sql, $params);     
-        }
-        /*
-        public static function select($table, $fields=array(), $where=array()){ 
-        $y=array(); 
-        $params=array();
-        $i=1;
-
-        if (count($fields)==0)
-        $f='*';
-        else {
-        foreach ($fields as &$field){
-        if (trim($field)!='*')
-        $field='`'.trim($field).'`';
+            return self::row($sql, $params);     
         }
 
-        $f=implode(',', $fields);  
-        }
-
-        if (count($where)>0){
-        foreach ($where as $key=>$value){
-        if ($value===null)
-        $y[]="(`${key}` IS NULL)"; 
-        else {
-        $y[]="(`${key}`=:param_$i)"; //:param_$i FIX 5/2015
-        $params[":param_$i"]=$value;
-        $i++;
-        }
-        }
-        $w='WHERE '.implode(' AND ',$y); 
-        } 
-        else
-        $w='';
-
-        $sql="SELECT $f FROM `${table}` ".$w;
-        return self::q($sql, $params);     
-        }
-        */
         public static function last_insert_id(){
-            $record=self::r("SELECT LAST_INSERT_ID() as id");  
+            $record=self::row("SELECT LAST_INSERT_ID() as id");  
             return $record['id'];
         }
-        /*
-        public static function field($table, $field, $where=array()){ 
-        $record=self::select1($table, array($field), $where);
-        return $record[$field];
-        }
-        */
+
         public static function numerator($table, $field, $where=array(), $start=1){ 
             $n=self::max($table, $field, $where)+1;
             if ($n<$start)
@@ -310,7 +270,7 @@
                 $w='';
               
             $sql="SELECT EXISTS (SELECT 1 FROM `${table}` ".$w.') x';
-            $result=self::r($sql, $params); 
+            $result=self::row($sql, $params); 
             
             return $result['x']==1;    
         }
