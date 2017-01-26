@@ -4,7 +4,7 @@ function lefts(str, n){
     else if (n > String(str).length)
         return str;
         else
-            return String(str).substring(0,n);
+            return String(str).substring(0, n);
 }
 
 function rights(str, n){
@@ -50,7 +50,7 @@ function rpos(substr,str){
 */
 
 function mids(str, posfrom, poslen){
-    return String(str).substring(posfrom,posfrom+poslen);
+    return String(str).substring(posfrom, posfrom+poslen);
 }
 
 function base64_encode(str){
@@ -235,10 +235,8 @@ var dlib = function(){
 
 
         post_form: function (id, url){
-
             var fdata = new FormData();
             var form=$('#'+id);
-            //$beforeSerialize
             var params = $(form).serializeArray();
             $.each(params, function (i, val) {
                 fdata.append(val.name, val.value);
@@ -300,7 +298,6 @@ var dlib = function(){
             $('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>').appendTo(document.body);
         },
         page_unblock:function(){
-            //$(".modal-backdrop2").remove();  
             $(".spinner").remove();  
         },
 
@@ -310,6 +307,25 @@ var dlib = function(){
 }();
 
 
+    $.fn.extend({
+    animateCss: function (animationName, callback) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.addClass('animated ' + animationName).one(animationEnd, function() {
+            $(this).removeClass('animated ' + animationName);
+            if (typeof callback == 'function') { // make sure the callback is a function
+        callback.call(this); 
+            }
+        });
+    }
+});
 
+ $.fn.extend({
+     fadeOutIn: function (msg) {
+        this.animateCss('fadeOut', function(){
+           $(this).html(msg);
+           $(this).animateCss('fadeIn');
+        });
+     }
+});
 
 

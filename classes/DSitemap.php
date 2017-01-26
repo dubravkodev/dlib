@@ -19,7 +19,7 @@
 
             $i=count($index);
             $file_name="sitemap-${i}.xml";
-            $file=C_ROOT."/${file_name}";
+            $file=APP_ROOT."/${file_name}";
             $sitemap_lastmod=0;
 
             $handle = fopen($file, "w");
@@ -61,7 +61,7 @@
         }
 
         private function save_index($index){
-            $file=C_ROOT."/sitemap.xml";
+            $file=APP_ROOT."/sitemap.xml";
 
             $handle = fopen($file, "w");
             fwrite($handle, '<?xml version="1.0" encoding="UTF-8"?>' . "\n");

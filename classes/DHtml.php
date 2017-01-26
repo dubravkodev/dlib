@@ -41,6 +41,13 @@
             else
                 $formId=false;  
 
+                if (isset($options['beforeStart'])){
+                $beforeStart=$options['beforeStart'];
+                unset($options['beforeStart']);
+            }
+            else
+                $beforeStart='';
+                
             if (isset($options['beforeSerialize'])){
                 $beforeSerialize=$options['beforeSerialize'];
                 unset($options['beforeSerialize']);
@@ -117,6 +124,7 @@
             $script[]=$beforeAjax;
 
             $script[]= <<<EOD
+            $beforeStart
         var btn = $(this);
         btn.attr('disabled', true);
 EOD

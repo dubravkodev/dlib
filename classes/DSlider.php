@@ -2,7 +2,7 @@
 
     class DSlider {
 
-        public function slider($id,  $options=array()){
+        public static function slider($id,  $options=array()){
             $html=array();
 
             $options['data-id']=$id;

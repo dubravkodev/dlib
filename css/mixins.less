@@ -8,16 +8,16 @@
 
 .fuction-controls(@bg_color, @color:@white){
 
-.bootstrap-select li.selected a{
+    .bootstrap-select li.selected a{
     background-color: @bg_color;
     color:@color; 
 }
 
 div.bootstrap-datetimepicker-widget{
-   li.accordion-toggle table tbody tr td a {
-        color:@bg_color;
-    }
-    table {
+    li.accordion-toggle table tbody tr td a {
+    color:@bg_color;
+}
+table {
     td.day.active{
     background-color: @bg_color;  
     color:@color; 
@@ -77,8 +77,16 @@ a.btn {
 }
 
 .panel-help-overflow{
-    color:@color;   
+    color:@color; 
+    a{
+    color:@color; 
+    &:hover, &:focus, &:active{
+    color:@color; 
 }
+}  
+}
+
+
 
 .fuction-controls(@bg_color, @color);
 

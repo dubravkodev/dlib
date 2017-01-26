@@ -219,7 +219,6 @@
                 $tabIndex=0;    
             }
 
-
             $tabs=isset($options['tabs'])?$options['tabs']:array();
             $fade=(isset($options['fade'])&&($options['fade']===true))?true:false;
 
@@ -235,7 +234,7 @@
                 $html[]="<div style='display:none'>"; 
             }
 
-            $html[]="<ul id='${id}_tab' class='nav nav-tabs' role='tablist' style='*display:none'>";
+            $html[]="<ul id='${id}_tab' class='nav nav-tabs' role='tablist'>";
             for ($i = 0; $i < count($tabs); $i++) {
                 $tab=$tabs[$i];
                 $tabId=$id.'_tab_'.$i;
@@ -288,8 +287,12 @@
                 $html[]="</div>"; 
             }
 
-
-            $html[]="<div id='${id}_tab_content' class='tab-content'>";
+            
+            $tab_content_class='tab-content';
+                if ($showTabs)
+            $tab_content_class.=' tab-content-frame';
+            
+            $html[]="<div id='${id}_tab_content' class='$tab_content_class'>";
             for ($i = 0; $i < count($tabs); $i++) {
                 $tab=$tabs[$i];
 

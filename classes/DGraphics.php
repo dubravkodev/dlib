@@ -2,6 +2,64 @@
 
     class DGraphics{
 
+        
+            /**
+    * Generates random color
+    * 
+    */
+    public static function rand_color(){
+        mt_srand((double)microtime()*1000000);
+        $c = '';
+        while(strlen($c)<6){
+            $c .= sprintf("%02X", mt_rand(100, 200));
+        }
+        return $c;
+    }
+    
+    
+    
+        /**
+    * Function get_remote_image_size reads image size from $url using image header data.
+    * 
+    * @param mixed $image_url
+    */
+    public static function get_remote_image_size($image_url){
+        $count=0;
+        $handle = fopen ($image_url, "rb");
+        $contents = "";
+        if ($handle) {
+            do {
+                $count += 1;
+                $data = fread($handle, 8192);
+                if (strlen($data) == 0) {
+                    break;
+                }
+                $contents .= $data;
+            } while(true);
+        } else { return false; }
+        fclose ($handle);
+
+        $im = ImageCreateFromString($contents);
+        if (!$im) { return false; }
+        $gis[0] = ImageSX($im);
+        $gis[1] = ImageSY($im);
+        // array member 3 is used below to keep with current getimagesize standards
+        $gis[3] = "width={$gis[0]} height={$gis[1]}";
+        ImageDestroy($im);
+        return $gis;
+    }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         public static function image_create_thumb($image_str, $width, $height, $quality=80, $difference=5){
 
             if(!($image_str === false)) {

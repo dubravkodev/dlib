@@ -25,9 +25,18 @@ input[type=checkbox] + label:before { content: "\f372"; } /* unchecked icon */
 input[type=checkbox]:checked + label:before { content: "\f373"; } /* checked icon */
 
 input[type=checkbox]:disabled + label:before{
-    color:#CCCCCC;   
+    color:#cccccc;   
 }
 
-input[type="checkbox"]:checked+label{ font-weight: 600; 
+//podebljamo label kada je checked
+input[type="checkbox"]:checked+label{ 
+    font-weight: 700; 
 } 
+
+//vratimo ikonu u labelu na normal
+input[type=checkbox]:checked + label:before {
+    font-weight: 400; 
+}
+
+
 }
