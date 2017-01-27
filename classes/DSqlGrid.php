@@ -1,11 +1,11 @@
 <?php
   
-  class DSqlGrid{
+  class DSQLGrid{
       
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         // sqlGrid
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-        public static function sql_grid($controller, $params=array()){ 
+        public static function render($controller, $params=array()){ 
             /* CGridView + CSqlDataProvider shortcut - summer 2012. */
             $sql=isset($params['sql'])?$params['sql']:'';  
             if (is_array($sql)){

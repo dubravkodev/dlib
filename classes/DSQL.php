@@ -10,7 +10,7 @@
     * Copyright © 2014-2016 Dubravko Loborec
     * */    
 
-    class DData
+    class DSQL
     {
 
         /* q is the alias of queryAll - returns false if no result */
