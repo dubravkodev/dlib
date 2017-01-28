@@ -55,7 +55,7 @@
             return implode(' ',$html);           
         }
 
-        public function form_slider($form, $model, $attribute, $options=array()){
+        public static function form_slider($form, $model, $attribute, $options=array()){
             $html=array();
 
             $id=CHtml::activeID($model,$attribute);

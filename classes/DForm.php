@@ -1098,6 +1098,8 @@
             $script[]="(function () {var state=false; ${onChange} })();";
             */
             $html[]= DScript::ready(implode(" ",$script));
+            
+            //$html[]= CHtml::script(implode(" ",$script));
 
             return implode("\n", $html)."\n";
         }
