@@ -30,6 +30,6 @@
 		"driftyco/ionicons": "2.0.1"
   },
   "autoload": {
-        "classmap": ["classes/"]
+        "classmap": ["src/"]
     }
 }
