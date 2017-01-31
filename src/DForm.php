@@ -1,9 +1,5 @@
 <?php     
 
-    /**
-    * Copyright © 2015-2016 Dubravko Loborec
-    */
-
     class DForm
     {
 
@@ -14,7 +10,8 @@
             * minLength
             * limit
             * templates
-            * label
+            * label //defaultna vrijednost
+            * onSelected data.value or data.label
             */
 
             if (isset($options['url'])){
@@ -58,8 +55,13 @@
             }
             else
                 $label='';
-
-
+                
+                if (isset($options['onSelected'])){
+                $onSelected=$options['onSelected'];
+                unset($options['onSelected']);
+            }
+            else
+                $onSelected='';
 
             /* end specijalni parametri */
 
@@ -67,15 +69,15 @@
 
             $html[]=$form->hiddenField($model, $attribute);
 
-            $hidden=CHtml::activeID($model, $attribute);
-            $id=$hidden.'_tmp';
-            $html[]= CHtml::textField($id, $label, $options);
+            $hidden_id=CHtml::activeID($model, $attribute);
+            $tmp_id=$hidden_id.'_tmp';
+            $html[]= CHtml::textField($tmp_id, $label, $options);
             $html[]= $form->error($model, $attribute);
 
             $js=array(); 
 
             $js[]=DScript::ready("
-                var ${hidden}_engine = new Bloodhound({ 
+                var ${tmp_id}_engine = new Bloodhound({ 
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 limit: $limit, 
@@ -87,23 +89,20 @@
                 },
                 });
 
-                ${hidden}_engine.initialize(); 
+                ${tmp_id}_engine.initialize(); 
 
-                $('#$id').typeahead({  
+                $('#$tmp_id').typeahead({  
                 highlight : $highlight,
                 minLength :$minLength,
                 },{
                 displayKey: 'label',
-                source: ${hidden}_engine.ttAdapter(), 
+                source: ${tmp_id}_engine.ttAdapter(), 
                 $templates
                 });
 
-
-
-
-
-
-                ");     
+                    $('#${tmp_id}').bind('typeahead:selected', function(evt, data) {  $('#${hidden_id}').val(data.value); $onSelected });
+                
+                ");    
             $html[]=implode(' ', $js);
             return implode("\n", $html);
         }  
