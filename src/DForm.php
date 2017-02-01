@@ -11,7 +11,7 @@
             * limit
             * templates
             * label //defaultna vrijednost
-            * onSelected data.value or data.label
+            * onChanged data.value or data.label
             */
 
             if (isset($options['url'])){
@@ -56,12 +56,12 @@
             else
                 $label='';
                 
-                if (isset($options['onSelected'])){
-                $onSelected=$options['onSelected'];
-                unset($options['onSelected']);
+                if (isset($options['onChanged'])){
+                $onChanged=$options['onChanged'];
+                unset($options['onChanged']);
             }
             else
-                $onSelected='';
+                $onChanged='';
 
             /* end specijalni parametri */
 
@@ -100,7 +100,7 @@
                 $templates
                 });
 
-                    $('#${tmp_id}').bind('typeahead:selected', function(evt, data) {  $('#${hidden_id}').val(data.value); $onSelected });
+                    $('#${tmp_id}').bind('typeahead:selected', function(evt, data) {  $('#${hidden_id}').val(data.value); $onChanged });
                 
                 ");    
             $html[]=implode(' ', $js);
@@ -1501,6 +1501,12 @@
         return implode(' ', $html);
         } */
 
+        
+        
+        /*
+            onSelected - var value=$(this).val();
+        
+        */
         public static function dropDownList($form, $model, $attribute, $options=array()){ 
             $multiple=false;
             if (isset($options['multiple'])){
@@ -1520,6 +1526,13 @@
             else
                 $items=array();
 
+                     if (isset($options['onChanged'])){
+                $onChanged=$options['onChanged'];
+                unset($options['onChanged']);
+            }
+            else
+                $onChanged='';
+                
             if (isset($model[$attribute])){
                 $selected_id=$model[$attribute];
 
@@ -1530,9 +1543,7 @@
             $html[]= $form->dropDownList($model, $attribute, $items, $options);
 
             $id =CHtml::activeID($model, $attribute);   
-            $html[]=DScript::ready("
-                $('#$id').selectpicker();
-                ");  
+            $html[]=DScript::ready("$('#$id').selectpicker().on('changed.bs.select', function (e) { $onChanged }); ");  
 
             if ($multiple){
                 $v=json_encode(explode(',',$model[$attribute]));
@@ -1576,12 +1587,12 @@
             $html[]= $form->hiddenField($model,$attribute);
             //----------------------------------------------------------------------------
 
-            if (isset($options['changeDate'])){   //alert(mysql_date);
-                $changeDate=$options['changeDate'];
-                unset($options['changeDate']);
+            if (isset($options['onChanged'])){ 
+                $onChanged=$options['onChanged'];
+                unset($options['onChanged']);
             }
             else
-                $changeDate='';  
+                $onChanged='';  
 
             $o=array();
             $dpoptions=array();
@@ -1626,13 +1637,13 @@
                     if (e.date !== false) {
                         var mysql_date = e.date.format("YYYY-MM-DD");
                         $('input#${hidden}').val(mysql_date);
-                        $changeDate
+                        $onChanged
                     }
                     else
                     {
                         var mysql_date ='';
                         $('input#${hidden}').val(mysql_date);
-                        $changeDate
+                        $onChanged
                     };
                 });
 EOT
@@ -1686,12 +1697,12 @@ EOT
             $html[]= $form->hiddenField($model,$attribute);
             //----------------------------------------------------------------------------
 
-            if (isset($options['changeDate'])){   //alert(mysql_date);
-                $changeDate=$options['changeDate'];
-                unset($options['changeDate']);
+            if (isset($options['onChanged'])){  
+                $onChanged=$options['onChanged'];
+                unset($options['onChanged']);
             }
             else
-                $changeDate='';  
+                $onChanged='';  
 
             $o=array();
             $dpoptions=array();
@@ -1736,13 +1747,13 @@ EOT
                     if (e.date !== false) {
                         var mysql_date_time = e.date.format("YYYY-MM-DD HH:mm:ss");
                         $('input#${hidden}').val(mysql_date_time);
-                        $changeDate
+                        $onChanged
                     }
                     else
                     {
                         var mysql_date_time ='';
                         $('input#${hidden}').val(mysql_date_time);
-                        $changeDate
+                        $onChanged
                     };
                 });
 EOT
