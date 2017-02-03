@@ -55,8 +55,8 @@
             }
             else
                 $label='';
-                
-                if (isset($options['onChanged'])){
+
+            if (isset($options['onChanged'])){
                 $onChanged=$options['onChanged'];
                 unset($options['onChanged']);
             }
@@ -100,8 +100,8 @@
                 $templates
                 });
 
-                    $('#${tmp_id}').bind('typeahead:selected', function(evt, data) {  $('#${hidden_id}').val(data.value); $onChanged });
-                
+                $('#${tmp_id}').bind('typeahead:selected', function(evt, data) {  $('#${hidden_id}').val(data.value); $onChanged });
+
                 ");    
             $html[]=implode(' ', $js);
             return implode("\n", $html);
@@ -286,11 +286,11 @@
                 $html[]="</div>"; 
             }
 
-            
+
             $tab_content_class='tab-content';
-                if ($showTabs)
-            $tab_content_class.=' tab-content-frame';
-            
+            if ($showTabs)
+                $tab_content_class.=' tab-content-frame';
+
             $html[]="<div id='${id}_tab_content' class='$tab_content_class'>";
             for ($i = 0; $i < count($tabs); $i++) {
                 $tab=$tabs[$i];
@@ -452,14 +452,14 @@
             else
                 $render=false; 
 
-                
-               
+
+
             $html[]=$form->textField($model, $attribute, $options);
 
             if ($render!==false){
                 $ctrl=CHtml::activeId($model, $attribute);
-               $html[]= script("$('#$ctrl').keypress(function(e) { if(e.which == 13) { $render } });");
-                
+                $html[]= script("$('#$ctrl').keypress(function(e) { if(e.which == 13) { $render } });");
+
             }
             return implode("\n", $html);
         }
@@ -1097,7 +1097,7 @@
             $script[]="(function () {var state=false; ${onChange} })();";
             */
             $html[]= DScript::ready(implode(" ",$script));
-            
+
             //$html[]= CHtml::script(implode(" ",$script));
 
             return implode("\n", $html)."\n";
@@ -1501,11 +1501,11 @@
         return implode(' ', $html);
         } */
 
-        
-        
+
+
         /*
-            onSelected - var value=$(this).val();
-        
+        onSelected - var value=$(this).val();
+
         */
         public static function dropDownList($form, $model, $attribute, $options=array()){ 
             $multiple=false;
@@ -1526,13 +1526,13 @@
             else
                 $items=array();
 
-                     if (isset($options['onChanged'])){
+            if (isset($options['onChanged'])){
                 $onChanged=$options['onChanged'];
                 unset($options['onChanged']);
             }
             else
                 $onChanged='';
-                
+
             if (isset($model[$attribute])){
                 $selected_id=$model[$attribute];
 
@@ -1604,6 +1604,13 @@
             $dpoptions['allowInputToggle']=isset($options['allowInputToggle'])?$options['allowInputToggle']:true;
             $dpoptions['viewMode']=isset($options['viewMode'])?$options['viewMode']:'days';
 
+                $date=$model[$attribute];
+            if (!(($date==null))){
+                $timestamp=mysql_date_to_timestamp($date);
+                $sec=$timestamp*1000;
+                $dpoptions['date']="<new Date($sec)>";
+            };
+
             foreach ($dpoptions as $key=>$value){
 
                 $type=gettype($value);
@@ -1615,7 +1622,10 @@
                         $v=$value;
                         break;
                     default:
-                        $v="'".$value."'";
+                           if (lefts($value, 1)=='<')
+                            $v=rdel(ldel($value, 1),1);
+                        else
+                            $v="'".$value."'";
                         break;
                 }
 
@@ -1649,7 +1659,7 @@
 EOT
             );
 
-            $date=$model[$attribute];
+         /*   $date=$model[$attribute];
 
             if (!(($date==null))){
 
@@ -1659,7 +1669,7 @@ EOT
                     var date = new Date(${timestamp}*1000); 
                     $('#${ctrl}').data('DateTimePicker').date(date);    
                     ");    
-            };
+            };*/
             return implode("\n", $html);
         }
 
@@ -1714,6 +1724,13 @@ EOT
             $dpoptions['allowInputToggle']=isset($options['allowInputToggle'])?$options['allowInputToggle']:true;
             $dpoptions['viewMode']=isset($options['viewMode'])?$options['viewMode']:'days';
 
+            $date=$model[$attribute];
+            if (!(($date==null))){
+                $timestamp=mysql_datetime_to_timestamp($date);
+                $sec=$timestamp*1000;
+                $dpoptions['date']="<new Date($sec)>";
+            };
+
             foreach ($dpoptions as $key=>$value){
 
                 $type=gettype($value);
@@ -1725,7 +1742,10 @@ EOT
                         $v=$value;
                         break;
                     default:
-                        $v="'".$value."'";
+                        if (lefts($value, 1)=='<')
+                            $v=rdel(ldel($value, 1),1);
+                        else
+                            $v="'".$value."'";
                         break;
                 }
 
@@ -1744,6 +1764,7 @@ EOT
                 $('#${ctrl}').datetimepicker({
                     ${options_str}
                 }).on('dp.change', function(e){
+          
                     if (e.date !== false) {
                         var mysql_date_time = e.date.format("YYYY-MM-DD HH:mm:ss");
                         $('input#${hidden}').val(mysql_date_time);
@@ -1759,17 +1780,6 @@ EOT
 EOT
             );
 
-            $date=$model[$attribute];
-
-            if (!(($date==null))){
-
-                $timestamp=mysql_datetime_to_timestamp($date);
-
-                $html[]= DScript::ready("   
-                    var date = new Date(${timestamp}*1000); 
-                    $('#${ctrl}').data('DateTimePicker').date(date);    
-                    ");    
-            };
             return implode("\n", $html);
         }
 
