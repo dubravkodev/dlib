@@ -57,19 +57,31 @@
             $errors=$model->getErrors();
             $jserrors=base64_encode(json_encode($errors));  //fix base64_encode
 
-
             $ModelFormName=get_class($model);
-
-
             if (self::captcha_check($model, $formId))
             {
                 $id=$formId.'_captcha';
-                $captcha= "jQuery('.captcha_placeholder').show(); jQuery('#$id').find('a').first().trigger('click');";
+                $captcha=<<<EOT
+                if ($('.captcha_placeholder').length){
+                jQuery('.captcha_placeholder').show(); jQuery('#$id').find('a').first().trigger('click');
+                }; 
+EOT
+                ;
             }
             else
             {
                 $captcha='';
             };
+
+
+            $language=Yii::app()->language;
+            $id=str_replace('-', '_',$formId).'_recaptcha';
+            $captcha.=<<<EOT
+                if ($('#{$id}_div').length){
+                    grecaptcha.reset();
+                    };
+EOT
+            ;
 
             return     //set timeout treba jer se inače preklapa sa client validacijom
             "setTimeout(function() {". 

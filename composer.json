@@ -32,6 +32,6 @@
         "twitter/typeahead.js": "0.10.5"
   },
   "autoload": {
-        "classmap": ["src/"]
+        "classmap": ["src/", "src/validators/"]
     }
 }

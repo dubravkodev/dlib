@@ -134,13 +134,21 @@ EOD
                 $script[]= <<<EOD
                 var fdata = new FormData();
                 var form=$('#${formId}');
-                $beforeSerialize
+                
+                         /* recaptcha support */
+                   $(form).find('.recaptcha').first().val(grecaptcha.getResponse());
+                   
+                   $beforeSerialize
+                   
                 var params = $(form).serializeArray();
                 $.each(params, function (i, val) {
                     fdata.append(val.name, val.value);
                 });
                 fdata.append('formId', '${formId}');
-               
+                
+       
+        
+                
                 $.each($(form).find('input[type=\'file\']'), function(i, tag) {
                     $.each($(tag)[0].files, function(i, file) {
                         fdata.append(tag.name, file);

@@ -1604,7 +1604,7 @@
             $dpoptions['allowInputToggle']=isset($options['allowInputToggle'])?$options['allowInputToggle']:true;
             $dpoptions['viewMode']=isset($options['viewMode'])?$options['viewMode']:'days';
 
-                $date=$model[$attribute];
+            $date=$model[$attribute];
             if (!(($date==null))){
                 $timestamp=mysql_date_to_timestamp($date);
                 $sec=$timestamp*1000;
@@ -1622,7 +1622,7 @@
                         $v=$value;
                         break;
                     default:
-                           if (lefts($value, 1)=='<')
+                        if (lefts($value, 1)=='<')
                             $v=rdel(ldel($value, 1),1);
                         else
                             $v="'".$value."'";
@@ -1659,16 +1659,16 @@
 EOT
             );
 
-         /*   $date=$model[$attribute];
+            /*   $date=$model[$attribute];
 
             if (!(($date==null))){
 
-                $timestamp=mysql_date_to_timestamp($date);
+            $timestamp=mysql_date_to_timestamp($date);
 
-                $html[]= DScript::ready("   
-                    var date = new Date(${timestamp}*1000); 
-                    $('#${ctrl}').data('DateTimePicker').date(date);    
-                    ");    
+            $html[]= DScript::ready("   
+            var date = new Date(${timestamp}*1000); 
+            $('#${ctrl}').data('DateTimePicker').date(date);    
+            ");    
             };*/
             return implode("\n", $html);
         }
@@ -1873,6 +1873,38 @@ EOT
             return $s;
         }  
 
+        public static function recaptcha($form, $model, $attribute, $site_key){
+            $html=[];
+            
+
+            $id=str_replace('-', '_',$form->id).'_recaptcha';
+
+            $language=Yii::app()->language;
+            $html[]="<script src='https://www.google.com/recaptcha/api.js?onload={$id}_callback&render=explicit&hl={$language}' async defer></script>";  
+
+            $html[]="<div id='{$id}_div'></div>";
+            $html[]=$form->hiddenField($model, $attribute, array('class'=>'recaptcha'));
+            
+            $html[]=<<<EOT
+                <script type="text/javascript">
+      var {$id}_callback = function () {
+      
+        console.log('recaptcha is ready'); // showing
+        grecaptcha.render("{$id}_div", {
+            sitekey: '$site_key',
+            callback: function () {
+                console.log('recaptcha callback');
+            }
+        });
+      }
+    </script>
+EOT
+            ;
+
+
+            return implode(' ', $html);
+
+        }
         //----------------------------------------------------------------------
 
         public static function postForm($formId, $url){
