@@ -1873,13 +1873,13 @@ EOT
             return $s;
         }  
 
-        public static function recaptcha($form, $model, $attribute, $site_key){
+        public static function recaptcha($form, $model, $attribute, $params=array()){
             $html=[];
-            
 
             $id=str_replace('-', '_',$form->id).'_recaptcha';
-
+            $site_key=$params['site_key'];
             $language=Yii::app()->language;
+            
             $html[]="<script src='https://www.google.com/recaptcha/api.js?onload={$id}_callback&render=explicit&hl={$language}' async defer></script>";  
 
             $html[]="<div id='{$id}_div'></div>";
@@ -1888,8 +1888,7 @@ EOT
             $html[]=<<<EOT
                 <script type="text/javascript">
       var {$id}_callback = function () {
-      
-        console.log('recaptcha is ready'); // showing
+        console.log('recaptcha is ready');
         grecaptcha.render("{$id}_div", {
             sitekey: '$site_key',
             callback: function () {
@@ -1901,9 +1900,7 @@ EOT
 EOT
             ;
 
-
             return implode(' ', $html);
-
         }
         //----------------------------------------------------------------------
 

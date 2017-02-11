@@ -41,13 +41,13 @@
             else
                 $formId=false;  
 
-                if (isset($options['beforeStart'])){
+            if (isset($options['beforeStart'])){
                 $beforeStart=$options['beforeStart'];
                 unset($options['beforeStart']);
             }
             else
                 $beforeStart='';
-                
+
             if (isset($options['beforeSerialize'])){
                 $beforeSerialize=$options['beforeSerialize'];
                 unset($options['beforeSerialize']);
@@ -135,8 +135,11 @@ EOD
                 var fdata = new FormData();
                 var form=$('#${formId}');
                 
-                         /* recaptcha support */
-                   $(form).find('.recaptcha').first().val(grecaptcha.getResponse());
+                /* recaptcha support */
+                var ctrl=$(form).find('.recaptcha').first();
+                if (ctrl.length){
+                  ctrl.val(grecaptcha.getResponse()); 
+                   }
                    
                    $beforeSerialize
                    

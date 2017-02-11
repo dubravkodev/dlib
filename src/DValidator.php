@@ -73,15 +73,8 @@ EOT
                 $captcha='';
             };
 
-
-            $language=Yii::app()->language;
             $id=str_replace('-', '_',$formId).'_recaptcha';
-            $captcha.=<<<EOT
-                if ($('#{$id}_div').length){
-                    grecaptcha.reset();
-                    };
-EOT
-            ;
+            $captcha.="if ($('#{$id}_div').length){ grecaptcha.reset(); };";
 
             return     //set timeout treba jer se inače preklapa sa client validacijom
             "setTimeout(function() {". 
