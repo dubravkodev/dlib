@@ -36,6 +36,10 @@
 
             $help=(isset($options) and isset($options['help']))?$options['help']:'';  
 
+            $titleTag=(isset($options) and isset($options['titleTag']))?$options['titleTag']:'h3';  
+            $hideHeading=(isset($options) and isset($options['hideHeading']))?$options['hideHeading']:false;  
+
+
             $header=(isset($options) and isset($options['header']))?$options['header']:''; 
             if (is_array($header))
                 $header=implode(' ',$header);
@@ -52,23 +56,23 @@
             $panelBodyStyle=(isset($options) and isset($options['panelBodyStyle']))?$options['panelBodyStyle']:'';
 
             /*if ($panelClass=='bg-white'){
-                $panelBodyStyle=$panelBodyStyle.' border-width:1px 0 0 0; border-style:solid; border-color:#DDDDDD;';
-                $defaultTitleColorClass='color-black';
+            $panelBodyStyle=$panelBodyStyle.' border-width:1px 0 0 0; border-style:solid; border-color:#DDDDDD;';
+            $defaultTitleColorClass='color-black';
             }
             else
             {
-                $defaultTitleColorClass='color-white'; 
-                //$defaultTitleColorClass=''; 
+            $defaultTitleColorClass='color-white'; 
+            //$defaultTitleColorClass=''; 
             }*/
-           $defaultTitleColorClass=''; 
-           
+            $defaultTitleColorClass=''; 
+
             $titleColorClass=(isset($options) and isset($options['titleColorClass']))?$options['titleColorClass']:$defaultTitleColorClass;
 
             $panelStyle=(isset($options) and isset($options['panelStyle']))?$options['panelStyle']:'';
-           /* if ($panelClass=='bg-white'){
-                $panelStyle=$panelStyle.' border-width:1px; border-style:solid; border-color:#DDDDDD;';
+            /* if ($panelClass=='bg-white'){
+            $panelStyle=$panelStyle.' border-width:1px; border-style:solid; border-color:#DDDDDD;';
             }*/
-            
+
 
             $headerStyle=(isset($options) and isset($options['headerStyle']))?$options['headerStyle']:'';
 
@@ -144,74 +148,90 @@
             }
 
             $html=array();
-            
+
             if ($wrapperClass!==false){
                 $html[]="<div class='${wrapperClass}'>";  
             }
 
-            $html[]=<<<EOT
-            <div id="$id" class="panel panel-material $panelClass" style="$panelStyle">
-                <div class="panel-heading clearfix" >
-                    <h3 class="panel-title $titleColorClass">$title</h3>
-                    <div class="panel-toolbar">
-                        $buttons
-                    </div>
-                </div>
-EOT;
-            if ($help!=''){ 
+            $html[]="    <div id='$id' class='panel panel-material $panelClass' style='$panelStyle'>";
+
+
+            if ($hideHeading===false){
                 $html[]=<<<EOT
-                    <div id='${id}_collapse_help' class="panel-help panel-collapse collapse $help_collapsed_in $titleColorClass">
-                          <div class='panel-help-overflow'> 
-                                $help
-                          </div>
-                    </div>
+        <div class="panel-heading clearfix" >
+            <$titleTag class="panel-title $titleColorClass">$title</$titleTag>
+            <div class="panel-toolbar">
+                $buttons
+            </div>
+        </div>
 EOT;
-            };
+
+                if ($help!=''){ 
+                    $html[]=<<<EOT
+        <div id='${id}_collapse_help' class="panel-help panel-collapse collapse $help_collapsed_in $titleColorClass">
+            <div class='panel-help-overflow'> 
+                $help
+            </div>
+        </div>
+EOT;
+                };
+            }
+
+
 
             if ($header!=''){
                 $html[]=<<<EOT
-                      <div class='panel-header' style='${headerStyle}'> 
-                            $header
-                      </div>
+        <div class='panel-header' style='${headerStyle}'> 
+            $header
+        </div>
 EOT;
             };       
 
-
-            $html[]=<<<EOT
-                <div id="${id}_collapse" class="panel-collapse collapse $collapsed_in">
+            if ($hideHeading===false){
+            if ($showCollapseButton){
+                $html[]=<<<EOT
+        <div id="${id}_collapse" class="panel-collapse collapse $collapsed_in">
 EOT;
-
-
+            }
+            }
 
             if ($filter!=''){
                 $html[]=<<<EOT
-                    <div id='${id}_collapse_filter' class="panel-filter panel-collapse collapse $filter_collapsed_in $titleColorClass">
-                          <div class='panel-filter-overflow'> 
-                                $filter
-                          </div>
-                    </div>
+            <div id='${id}_collapse_filter' class="panel-filter panel-collapse collapse $filter_collapsed_in $titleColorClass">
+                <div class='panel-filter-overflow'> 
+                    $filter
+                </div>
+            </div>
 EOT;
             };
 
 
-            $splitter= l("<i class='ion-drag ion-lg'></i>", "#${id}_collapse", array(
-                'id'=>$id.'_splitter',
-                'data-toggle'=>"collapse",
-                'class'=>"btn-panel-toolbar panel-splitter $collapsed_str",
-                'style'=>$expanded?'display:none;':'',
-            ));
 
             $html[]=<<<EOT
-                    <div id="${id}_panel_body" class="panel-body $panelBodyClass" style="$panelBodyStyle">
-                        $_html
-                    </div>
-                </div>   
-                $splitter  
-            </div>
+            <div id="${id}_panel_body" class="panel-body $panelBodyClass" style="$panelBodyStyle">
+                $_html
+            </div><!-- /panel-body -->
 EOT;
 
+
+            if ($hideHeading===false) {
+                if ($showCollapseButton){       
+                $html[]="        </div><!-- /collapse -->";
+
+                $html[]=l("<i class='ion-drag ion-lg'></i>", "#${id}_collapse", array(
+                    'id'=>$id.'_splitter',
+                    'data-toggle'=>"collapse",
+                    'class'=>"btn-panel-toolbar panel-splitter $collapsed_str",
+                    'style'=>$expanded?'display:none;':'',
+                ));
+            }
+            }
+
+
+            $html[]="    </div><!-- /panel -->";
+
             if ($wrapperClass!==false){
-                $html[]="</div>";  
+                $html[]="</div><!-- /wrapper -->";  
             }
 
             if (isset($options) and isset($options['onExpand'])){
@@ -222,7 +242,10 @@ EOT
                 );    
             }
 
-            $html[]=DScript::ready(<<<EOT
+
+            if ($hideHeading===false){
+                if ($showCollapseButton){   
+                    $html[]=DScript::ready(<<<EOT
                 $("#${id}_collapse").on("shown.bs.collapse", function (){ 
                     $('#${id}_splitter').hide();
                 });
@@ -230,7 +253,9 @@ EOT
                     $('#${id}_splitter').show();
                 });
 EOT
-            );  
+                    );  
+                }
+            }
 
             if (isset($options) and isset($options['url'])){
                 $url=$options['url'];
@@ -290,9 +315,7 @@ EOT
                 }
             }
 
-            return implode( " ", $html);
+            return implode( "\n", $html);
         }
 
-
     }
-?>
