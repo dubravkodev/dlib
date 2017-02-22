@@ -153,7 +153,7 @@
                 $html[]="<div class='${wrapperClass}'>";  
             }
 
-            $html[]="    <div id='$id' class='panel panel-material $panelClass' style='$panelStyle'>";
+            $html[]="    <div id='$id' class='panel panel-default $panelClass' style='$panelStyle'>";
 
 
             if ($hideHeading===false){

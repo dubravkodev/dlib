@@ -1255,6 +1255,15 @@
             }
             $options['class']=$class;
 
+            if (isset($options['onchange'])){
+                $onchange=$options['onchange'];
+                unset($options['onchange']);
+            }
+            else
+                $onchange=false; 
+            
+            
+            
             $data=$options['data'];
             unset($options['data']);
 
@@ -1315,6 +1324,9 @@
                 $html[]="</div><! --/form-group -->";
 
             $script=array();
+            
+            
+            
             $n=1;
             foreach ($data as $d){
                 $btn_id= $id.'_btn_'.$n;
@@ -1322,6 +1334,11 @@
                 //
                 $script[]="$('#${btn_id}').on('click', function () {";
                 $script[]="$('#${id}').val('${value}');";
+                
+                if ($onchange!==false){
+                  $script[]="$onchange"; 
+                }
+                
                 $script[]="});";
                 //
                 $n++; 

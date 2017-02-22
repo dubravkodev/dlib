@@ -68,15 +68,19 @@ a.btn {
 
 .function-panel(@bg_color, @color:@white){
     background-color: @bg_color;
-
-    .panel-title{
+    border-color: @bg_color;
+     .panel-heading{
+        background-color:transparent;
+        color:@color;
+   /* .panel-title{
     color:@color;
-}
-
+}*/
+    
 .panel-toolbar a{
     color:@color;
 } 
-
+ }
+ 
 .panel-body{
     background-color: #fff; 
 }
