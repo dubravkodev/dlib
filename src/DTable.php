@@ -1,8 +1,7 @@
 <?php
-  
-  class DTable{
-      
-      
+
+    class DTable{
+
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         // table
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
@@ -15,9 +14,6 @@
 
         public static function table($id, $data, $options){
 
-            if ($id===false)
-                $id='';
-
             if (isset($options['class']))
                 $class=$options['class'];
             else
@@ -28,15 +24,21 @@
             else
                 $style='';
 
-            $explain= isset($options['explain']) and ($options['explain']===true);
-
             $head=isset($data['head'])?$data['head']:array();
             $body=isset($data['body'])?$data['body']:array();
             $foot=isset($data['foot'])?$data['foot']:array();
 
             $html=array();
             $html[]="<div class='table-responsive'>";
-            $html[]="<table id='$id' class='$class' style='$style'>";
+
+
+            if ($id===false){
+                $html[]="<table class='$class' style='$style'>";
+            }
+            else
+            {
+                $html[]="<table id='$id' class='$class' style='$style'>";
+            }
 
             if (count($head)>0){
                 $html[]="<thead>";
@@ -44,8 +46,7 @@
 
                 $index=0;
                 foreach ($head as $h){
-                    $class=$explain!==false?"class='".$id."_thead_tr_td_$index'":'';
-                    $html[]="<td $class>$h</td>";
+                    $html[]="<td>$h</td>";
                     $index++;  
                 }
 
@@ -57,23 +58,15 @@
 
             $tr_index=0;
             foreach ($body as $bbq){
-                $class=$explain!==false?"class='".$id."_tr_$tr_index'":'';
-                $html[]= "<tr $class>";
+                $html[]= "<tr>";
 
                 $s1='';
                 $td_index=0;
                 foreach ($bbq as $b1){
-                    $class=$explain!==false?"class='".$id."_td_$td_index'":'';
-                    $s1.="<td $class>".$b1.'</td>'; 
+                    $s1.="<td>".$b1.'</td>'; 
                     $td_index++;    
                 }   
                 $html[]=$s1;  
-
-
-
-                //   $html[]= self::_implode('<td $class>','</td>', $bb);
-
-
 
                 $html[]= '</tr>'; 
                 $tr_index++; 
@@ -90,11 +83,10 @@
             }  
 
             $html[]="</table>";
-            $html[]="</div><!-- /.table-responsive-->";
+            $html[]="</div>";
             return implode("\n", $html);
         }
-      
-      
-  }
-  
-?>
+
+
+    }
+
