@@ -5,12 +5,12 @@
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         // table
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-        private static function _implode($prefix, $sufix, $array){
+      /*  private static function _implode($prefix, $sufix, $array){
             $s='';
             foreach ($array as $a)
                 $s.=$prefix.$a.$sufix;
             return $s;
-        } 
+        }  */
 
         public static function table($id, $data, $options){
 
@@ -28,6 +28,9 @@
             $body=isset($data['body'])?$data['body']:array();
             $foot=isset($data['foot'])?$data['foot']:array();
 
+            
+            $encode=isset($options['encode'])?$options['encode']:false;
+            
             $html=array();
             $html[]="<div class='table-responsive'>";
 
@@ -46,6 +49,11 @@
 
                 $index=0;
                 foreach ($head as $h){
+                    
+                    if ($encode){
+                       $h=e($h); 
+                    }
+                    
                     $html[]="<td>$h</td>";
                     $index++;  
                 }
@@ -56,20 +64,20 @@
 
             $html[]="<tbody>";
 
-            $tr_index=0;
             foreach ($body as $bbq){
                 $html[]= "<tr>";
 
                 $s1='';
-                $td_index=0;
                 foreach ($bbq as $b1){
+                      if ($encode){
+                       $b1=e($b1); 
+                    }
+                    
                     $s1.="<td>".$b1.'</td>'; 
-                    $td_index++;    
                 }   
                 $html[]=$s1;  
 
                 $html[]= '</tr>'; 
-                $tr_index++; 
             }
             $html[]="</tbody>";  
 
@@ -77,6 +85,11 @@
                 $html[]="<tfoot>";
                 $html[]="<tr>";
                 foreach ($foot as $f)
+                
+                      if ($encode){
+                       $f=e($f); 
+                    }
+                
                     $html[]="<td>$f</td>";
                 $html[]="</tr>";
                 $html[]="</tfoot>";
