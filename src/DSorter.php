@@ -48,7 +48,7 @@
             if ($up)
                 $sql.=' DESC';
 
-            $records=db::q($sql, $params);
+            $records=DSQL::query($sql, $params);
 
             for ($i = 0; $i < count($records); $i++) {
 
@@ -73,16 +73,16 @@
 
                         $next_sort_order=$record[$sort_field]; //spremimo novi sort order
 
-                        db::update($table, array(
-                            'sort_order'=>db::numerator($table, $sort_field, $key_fields_values)+1,
+                        DSQL::update($table, array(
+                            'sort_order'=>DSQL::numerator($table, $sort_field, $key_fields_values)+1,
                             ), $next_key_fields_values
                         );
                         //
-                        db::update($table, array(
+                        DSQL::update($table, array(
                             'sort_order'=>$next_sort_order,
                             ), $key_fields_values);
                         //
-                        db::update($table, array(
+                        DSQL::update($table, array(
                             'sort_order'=>$sort_order,
                             ), $next_key_fields_values);
 
