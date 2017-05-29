@@ -15,7 +15,7 @@
             self::save_index($index); 
         }
 
-        private function save_sitemap(&$index, $items){
+        private static function save_sitemap(&$index, $items){
 
             $i=count($index);
             $file_name="sitemap-${i}.xml";
@@ -60,7 +60,7 @@
             $index[]=[absurl($file_name), date('Y-m-d', $sitemap_lastmod)]; 
         }
 
-        private function save_index($index){
+        private static function save_index($index){
             $file=APP_ROOT."/sitemap.xml";
 
             $handle = fopen($file, "w");
@@ -83,4 +83,49 @@
             fclose($handle);
         }
 
+        
+        
+      private static function generate_sitemap($items){
+            $result='';
+            
+            $result.= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+               $result.=  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+            foreach ($items as $item){
+                  $result.= '  <url>' . "\n";
+
+                $loc=$item[0];
+                  $result.= "    <loc>${loc}</loc>\n";
+
+                $lastmod=date('Y-m-d', $item[1]);
+                   $result.=  "    <lastmod>${lastmod}</lastmod>\n";
+
+                $changefreq=$item[2];
+                if (!empty($changefreq) && in_array(strtolower($changefreq), array('always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'))) {
+                       $result.=  "    <changefreq>${changefreq}</changefreq>\n";
+                }
+
+                $priority=$item[3];
+                if (is_numeric($priority)){
+                    $priority= ($priority < 1) ? round(abs($priority), 1) : '1.0';
+                      $result.= "    <priority>${priority}</priority>\n";
+                }        
+
+
+                   $result.= '  </url>' . "\n"; 
+            }
+
+               $result.=  '</urlset>' . "\n";
+           
+           return $result;
+          
+      }
+        
+        public static function output($items){
+            header("Content-type: text/xml");
+           echo self::generate_sitemap($items); 
+        }
+            
+            
+        
     }        

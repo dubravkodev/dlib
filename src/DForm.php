@@ -1066,6 +1066,7 @@
             if (isset($options['size']))
                 $params['size']=$options['size'];
 
+               
             //if (isset($options['state'])) {
 
             // $params['state']=$model[$attribute]==='N'?false:true;
