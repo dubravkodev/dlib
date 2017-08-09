@@ -1595,7 +1595,7 @@
                 $iconClass='glyphicon glyphicon-calendar';  
 
 
-            $html[]="<div id='${ctrl}' style='max-width:200px' class='input-group date'>";
+            $html[]="<div id='${ctrl}' class='input-group date'>"; //style='max-width:200px'
 
             $html[]= CHtml::textField($tmp,'', $tmpOptions);
             $html[]="<span class='input-group-addon'><i class='$iconClass'></i></span>";
@@ -1715,7 +1715,7 @@ EOT
                 $iconClass='glyphicon glyphicon-calendar';  
 
 
-            $html[]="<div id='${ctrl}' style='max-width:250px' class='input-group date'>";
+            $html[]="<div id='${ctrl}' class='input-group date'>"; //style='max-width:250px' 
 
             $html[]= CHtml::textField($tmp,'', $tmpOptions);
             $html[]="<span class='input-group-addon'><i class='$iconClass'></i></span>";
