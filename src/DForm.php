@@ -481,7 +481,7 @@
 
             $ctrl=CHtml::ActiveID($model, $attribute); 
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
             $html=array();
 
@@ -507,7 +507,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -532,7 +532,7 @@
 
             $ctrl=CHtml::ActiveID($model, $attribute); 
             if ($helpBlock!='')
-                $htmlOptions['aria-describedby']=$ctrl.'_helpBlock_';
+                $htmlOptions['aria-describedby']=$ctrl.'_helpBlock';
 
             if (isset($options['maxlength']))
                 $htmlOptions['maxlength']=$options['maxlength'];
@@ -564,7 +564,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -591,7 +591,7 @@
             $ctrl=CHtml::ActiveID($model, $attribute); 
 
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
             if (! isset($options['rows']))
                 $options['rows']=2;   
@@ -622,7 +622,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -645,7 +645,7 @@
 
         $ctrl=CHtml::activeID($model, $attribute);   
         if ($helpBlock!='')
-        $options['aria-describedby']=$ctrl.'_helpBlock_';
+        $options['aria-describedby']=$ctrl.'_helpBlock';
 
         $html=array();   
 
@@ -664,7 +664,7 @@
 
         if ($helpBlock!=''){
         $html[]= CHtml::tag('span', array(
-        'id'=>$ctrl.'_helpBlock_',
+        'id'=>$ctrl.'_helpBlock',
         'class'=>'help-block',
         ),$helpBlock);
         }   
@@ -689,7 +689,7 @@
 
             $ctrl=CHtml::activeID($model, $attribute);   
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
             $html=array();   
 
@@ -708,7 +708,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }   
@@ -733,7 +733,7 @@
 
             $ctrl=CHtml::activeID($model, $attribute);   
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
             $html=array();   
 
@@ -752,7 +752,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }   
@@ -776,7 +776,7 @@
 
             $ctrl=CHtml::activeID($model, $attribute);   
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
 
             $class='form-control '; 
@@ -807,7 +807,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -834,7 +834,7 @@
 
             $ctrl=CHtml::activeID($model, $attribute);   
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
             $afterInsert=isset($options['afterInsert'])?$options['afterInsert']:'';
 
@@ -875,7 +875,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -987,6 +987,7 @@
         'offText'=>'No',
         'help'=>settings::help('xxxxxxxxxxhelp_employer_companies_privacy_settings_anonymous'),
         'onChange'=>'if (state==true){$("#consultant_employers_container").collapse("show")}else{$("#consultant_employers_container").collapse("hide")};',
+        'collapse'=>'initial_price_div',
         )); 
         ...
         $html[]= "<div class='collapse' id='consultant_employers_container'>";
@@ -1003,7 +1004,9 @@
 
             $renderInnerDiv=isset($options['renderInnerDiv'])?$options['renderInnerDiv']:true; 
 
-            $onChange=isset($options['onChange'])?$options['onChange']:'';
+            $onChange=isset($options['onChange'])?$options['onChange']:false;
+            $collapse=isset($options['collapse'])?$options['collapse']:false;
+            
 
             $htmlOptions=array();
 
@@ -1033,14 +1036,14 @@
             $a['value'] = 'Y';     
             $a['uncheckValue'] = 'N';
             if ($helpBlock!='')
-                $a['aria-describedby']=$ctrl.'_helpBlock_';
+                $a['aria-describedby']=$ctrl.'_helpBlock';
 
             $html[]= $form->checkBox($model, $attribute, $a); 
             $html[]= $form->error($model, $attribute);
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -1089,8 +1092,22 @@
             $script=array();
 
             $script[]="$('#${ctrl}').bootstrapSwitch($json);";
-            $script[]="$('#${ctrl}').on('switchChange.bootstrapSwitch', function(event, state) { ${onChange} });"; //state=true / state=false    
-
+            
+            if ($onChange!==false){
+                $script[]="$('#${ctrl}').on('switchChange.bootstrapSwitch', function(event, state) { ${onChange} });"; //state=true / state=false    
+            }
+            
+            if ($collapse!==false){
+                $script[]="$('#${ctrl}').on('switchChange.bootstrapSwitch', function(event, state) { if (state==true){\$('#$collapse').collapse('show')}else{\$('#$collapse').collapse('hide')}; });";
+                
+                
+                if ($model->$attribute==='Y'){
+                    $script[]="$('#$collapse').collapse('show');";
+                    
+                }
+                
+            }
+            
             //init
             /*     if ($model[$attribute]==='Y')
             $script[]="(function () {var state=true; ${onChange} })();";
@@ -1171,7 +1188,7 @@
 
             $ctrl=CHtml::activeID($model, $attribute);   
             if ($helpBlock!='')
-                $options['aria-describedby']=$ctrl.'_helpBlock_';
+                $options['aria-describedby']=$ctrl.'_helpBlock';
 
             $renderInnerDiv=isset($options['renderInnerDiv'])?$options['renderInnerDiv']:true;
 
@@ -1198,7 +1215,7 @@
 
             if ($helpBlock!=''){
                 $html[]= CHtml::tag('span', array(
-                    'id'=>$ctrl.'_helpBlock_',
+                    'id'=>$ctrl.'_helpBlock',
                     'class'=>'help-block',
                     ),$helpBlock);
             }
@@ -1447,7 +1464,7 @@
 
                 if (isset($d['help'])){
                     $html[]= CHtml::tag('span', array(
-                        // 'id'=>$ctrl.'_helpBlock_',
+                        // 'id'=>$ctrl.'_helpBlock',
                         'class'=>'help-block',
                         ),$d['help']);
                 }
@@ -1550,6 +1567,14 @@
             }
             else
                 $onChanged='';
+                
+          /*         if (isset($options['afterLoaded'])){
+                $afterLoaded=$options['afterLoaded'];
+                unset($options['afterLoaded']);
+            }
+            else
+                $afterLoaded='';
+*/
 
             if (isset($model[$attribute])){
                 $selected_id=$model[$attribute];

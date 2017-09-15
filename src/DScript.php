@@ -24,6 +24,8 @@
                     $dialogSizeClass='modal-lg';
                 else if ($options['dialogSize']=='small')
                     $dialogSizeClass='modal-sm';
+                else if ($options['dialogSize']=='full')
+                    $dialogSizeClass='modal-full';
 
                     unset($options['dialogSize']);
             }

@@ -1,13 +1,16 @@
 <?php
   
-  class DSQLGrid{
+  class DArrayGrid{
       
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         // sqlGrid
         //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         public static function render($controller, $params=array()){ 
+            
+            $data=$params['data'];
+            
             /* CGridView + CSqlDataProvider shortcut - summer 2012. */
-            $sql=isset($params['sql'])?$params['sql']:'';  
+        /*    $sql=isset($params['sql'])?$params['sql']:'';  
             if (is_array($sql)){
                 $sql=implode(' ', $sql); 
             }
@@ -20,9 +23,11 @@
             $sqlParams=isset($params['sqlParams'])?$params['sqlParams']:array();
             $countSqlParams=isset($params['countSqlParams'])?$params['countSqlParams']:$sqlParams; 
 
+
             $keyField=isset($params['keyField'])?$params['keyField']:null;
+            */
             $pageSize=isset($params['pageSize'])?$params['pageSize']:null;
-            $sort=isset($params['sort'])?$params['sort']:null;
+
 
             $dataParams=isset($params['dataParams'])?$params['dataParams']:array();
             $gridParams=isset($params['gridParams'])?$params['gridParams']:array();
@@ -64,23 +69,23 @@
                     $gridParams['htmlOptions']['class']='grid-view table-responsive';
             };
 
+            /*
             $command=Yii::app()->db->createCommand($countSql);
             $command->params=$countSqlParams;
 
             $dataParams['totalItemCount']=$command->queryScalar();  
             if ($keyField!=null)
                 $dataParams['keyField']=$keyField;
-            if ($pageSize!=null) 
-                $dataParams['pagination']=array('pageSize'=>$pageSize);
-            if ($sort!=null) 
-                $dataParams['sort']=$sort;
-                
-                if (count($sqlParams)>0)
+            
+
             $dataParams['params']=$sqlParams;
-            
             $dataProvider=new CSqlDataProvider($sql, $dataParams);
-            
-            //dump($dataParams);
+*/
+
+if ($pageSize!=null) 
+                $dataParams['pagination']=array('pageSize'=>$pageSize);
+
+        $dataProvider = new CArrayDataProvider($data, $dataParams);
 
             $gridParams['dataProvider']=$dataProvider; 
 
